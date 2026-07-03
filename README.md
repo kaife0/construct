@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CasaStruct
 
-## Getting Started
+Website for a civil-engineering & architecture practice — services showcase, smart
+material calculators, ready-made plans, blog, and an admin panel. Contact happens
+via tap-to-WhatsApp, phone, and email.
 
-First, run the development server:
+## Tech stack
+- **Next.js 16** (App Router) + **React 19** + **TypeScript**
+- **Tailwind CSS v4** + **Motion** (animations) + **lucide-react** (icons)
+- **MongoDB** via **Mongoose** (hosted on MongoDB Atlas)
+- **Auth.js** for the admin login (added in a later phase)
 
+## Getting started
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in MONGODB_URI etc.
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Requires Node **20.19+** or **22 LTS** for full Next 16 support (it builds on
+> 20.14 but with engine warnings).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
+- `npm run dev` — local dev server
+- `npm run build` — production build
+- `npm run start` — run the production build
+- `npm run lint` — lint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
+```
+src/
+  app/            # routes (App Router) + layout + global styles
+  components/     # shared UI (navbar, footer, whatsapp button, reveal, icons)
+  lib/            # site config, db connection, utils
+```
 
-## Learn More
+## Build phases
+1. Setup — scaffold, design system, DB connection, navbar/footer shell ✅
+2. Public site — home, services, about, contact
+3. Calculators — bricks, cement, steel, sand, stone
+4. Blog + ready-made plans
+5. Database + APIs (MongoDB Atlas)
+6. Admin panel (auth + CRUD)
+7. Deploy to Hostinger
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Configuration
+Placeholder contact details live in `src/lib/site.ts` — replace with the client's
+real phone, WhatsApp number (intl format, digits only), and email. These become
+admin-editable in phase 6.
