@@ -107,7 +107,12 @@ export function Footer() {
       <div className="border-t border-paper/10">
         <div className="container-x flex flex-col items-center justify-between gap-2 py-6 sm:flex-row">
           <p className="label text-paper/40">© {year} {siteConfig.name}</p>
-          <p className="label text-paper/40">Designed &amp; engineered for builders</p>
+          <div className="flex items-center gap-4">
+            <p className="label text-paper/40">Designed &amp; engineered for builders</p>
+            <Link href="/admin" className="label text-paper/25 transition-colors hover:text-paper/50">
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

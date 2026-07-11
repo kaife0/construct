@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { WhatsAppButton } from "@/components/whatsapp-button";
 import { siteConfig } from "@/lib/site";
 
 const geistSans = Geist({
@@ -24,6 +21,11 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
+/**
+ * Bare root shell — fonts, global CSS and metadata only. The public site's
+ * chrome (navbar/footer/WhatsApp button) lives in `(site)/layout.tsx` so that
+ * `/admin` routes render with their own, completely separate layout.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,12 +36,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <WhatsAppButton />
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }
