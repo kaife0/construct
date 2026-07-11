@@ -15,7 +15,7 @@ export const siteConfig = {
     phoneHref: "tel:+918797786067",
     email: "adildream10@gmail.com",
     whatsappNumber: "918797786067", // intl format, digits only
-    location: "India",
+    location: "Rajmahal, Sahibganj, Jharkhand, India",
   },
   socials: {
     instagram: "#",
