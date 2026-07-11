@@ -6,7 +6,7 @@ export function PlansShowcaseSection() {
   return (
     <section id="plans" className="scroll-mt-20 border-t border-line">
       <div className="container-x py-12 md:py-16">
-        <p className="label">(07) — Ready-made Plans</p>
+        <p className="label">Also available</p>
         <h2 className="display mt-4 max-w-md text-3xl sm:text-4xl">
           Or start from a proven plan.
         </h2>

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { ServiceGrid } from "@/components/services/service-grid";
 import { PlansShowcaseSection } from "@/components/services/plans-showcase-section";
+import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
 import { services } from "@/lib/content";
-import { siteConfig, whatsappUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -30,21 +29,10 @@ export default function ServicesPage() {
 
       <PlansShowcaseSection />
 
-      {/* CTA */}
-      <section className="border-t border-line">
-        <div className="container-x flex flex-col items-start justify-between gap-6 py-12 md:flex-row md:items-center md:py-14">
-          <h2 className="display max-w-md text-2xl sm:text-3xl">Not sure which service you need?</h2>
-          <a
-            href={whatsappUrl(`Hi ${siteConfig.name}, I'd like help choosing a service.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"
-          >
-            Ask on WhatsApp
-            <ArrowUpRight size={17} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-        </div>
-      </section>
+      <WhatsAppCtaSection
+        heading="Not sure which service you need?"
+        message="I'd like help choosing a service."
+      />
     </>
   );
 }
