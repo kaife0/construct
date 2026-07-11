@@ -10,6 +10,8 @@ export type Post = {
   category: string;
   date: string; // ISO
   readMins: number;
+  /** Placeholder photo — replace with the client's real cover image. */
+  image: string;
 };
 
 export const posts: Post[] = [
@@ -20,6 +22,7 @@ export const posts: Post[] = [
     category: "Estimation",
     date: "2026-05-18",
     readMins: 4,
+    image: "https://images.unsplash.com/photo-1704005446360-5f30e4276182?w=800&q=80&auto=format&fit=crop",
   },
   {
     slug: "m20-vs-m25-concrete",
@@ -28,6 +31,7 @@ export const posts: Post[] = [
     category: "Structural",
     date: "2026-04-02",
     readMins: 6,
+    image: "https://images.unsplash.com/photo-1685464196387-854858ce0f4f?w=800&q=80&auto=format&fit=crop",
   },
   {
     slug: "vastu-and-planning",
@@ -36,5 +40,6 @@ export const posts: Post[] = [
     category: "Planning",
     date: "2026-02-27",
     readMins: 5,
+    image: "https://images.unsplash.com/photo-1433840496881-cbd845929862?w=800&q=80&auto=format&fit=crop",
   },
 ];

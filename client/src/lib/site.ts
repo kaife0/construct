@@ -10,12 +10,11 @@ export const siteConfig = {
   tagline: "Build with confidence.",
   description:
     "Civil engineering and architectural services — house planning, structural design, interiors, and 2D/3D plans. Smart material calculators and ready-made plans.",
-  // Placeholder contact details — replace with the client's real info.
   contact: {
-    phone: "+91 90000 00000",
-    phoneHref: "tel:+919000000000",
-    email: "hello@casastruct.example",
-    whatsappNumber: "919000000000", // intl format, digits only
+    phone: "+91 87977 86067",
+    phoneHref: "tel:+918797786067",
+    email: "adildream10@gmail.com",
+    whatsappNumber: "918797786067", // intl format, digits only
     location: "India",
   },
   socials: {

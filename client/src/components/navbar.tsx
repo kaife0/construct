@@ -41,10 +41,7 @@ export function Navbar() {
             <span className="relative z-10 transition-colors group-hover:text-paper">C</span>
             <span className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-300 group-hover:scale-y-100" />
           </span>
-          <span className="flex flex-col leading-none">
-            <span className="text-[15px] font-semibold tracking-tight">{siteConfig.name}</span>
-            <span className="label mt-1 hidden text-[9px] sm:block">Civil Engineering</span>
-          </span>
+          <span className="text-[15px] font-semibold tracking-tight">{siteConfig.name}</span>
         </Link>
 
         {/* Desktop links */}

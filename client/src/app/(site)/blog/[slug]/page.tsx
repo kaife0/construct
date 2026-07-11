@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Reveal } from "@/components/reveal";
@@ -46,7 +47,21 @@ export default async function BlogPostPage({
         </div>
       </header>
 
-      <div className="container-x py-14 md:py-20">
+      <div className="container-x pt-10 md:pt-14">
+        <div className="relative aspect-[16/9] w-full max-w-3xl overflow-hidden border border-line">
+          <Image
+            src={post.image}
+            alt={post.title}
+            fill
+            unoptimized
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-cover"
+            priority
+          />
+        </div>
+      </div>
+
+      <div className="container-x py-10 md:py-14">
         <Reveal>
           <div className="max-w-2xl space-y-5 text-base leading-relaxed text-graphite">
             <p className="text-lg text-ink">{post.excerpt}</p>
