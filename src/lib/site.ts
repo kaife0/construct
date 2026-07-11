@@ -25,15 +25,14 @@ export const siteConfig = {
   },
 } as const;
 
-/** Primary navigation links (public site). */
+/** Primary navigation links (public site). Contact lives on the home page, not a route. */
 export const navLinks = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "Calculators", href: "/calculators" },
-  { label: "Plans", href: "/plans" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 /**

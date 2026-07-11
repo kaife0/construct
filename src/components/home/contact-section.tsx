@@ -1,14 +1,7 @@
-import type { Metadata } from "next";
 import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
 import { Reveal } from "@/components/reveal";
 import { ContactForm } from "@/components/contact-form";
 import { siteConfig, whatsappUrl } from "@/lib/site";
-
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Get in touch on WhatsApp, phone or email — response within 24 hours.",
-};
 
 const channels = [
   {
@@ -24,18 +17,19 @@ const channels = [
   { key: "email", label: "Email", value: siteConfig.contact.email, icon: Mail, href: `mailto:${siteConfig.contact.email}`, external: false },
 ];
 
-export default function ContactPage() {
+export function ContactSection() {
   return (
-    <>
-      <PageHeader
-        index="07"
-        label="Contact"
-        title="Let's build something that lasts."
-        lede="Tell us about your project. We usually reply within a day — WhatsApp is fastest."
-      />
+    <section id="contact" className="border-t border-line scroll-mt-20">
+      <div className="container-x py-16 md:py-24">
+        <p className="label">(07) — Contact</p>
+        <h2 className="display mt-4 max-w-lg text-3xl sm:text-4xl">
+          Let&apos;s build something that lasts.
+        </h2>
+        <p className="mt-5 max-w-lg text-base leading-relaxed text-graphite">
+          Tell us about your project. We usually reply within a day — WhatsApp is fastest.
+        </p>
 
-      <section>
-        <div className="container-x grid gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-8">
+        <div className="mt-10 grid gap-8 lg:grid-cols-12 lg:gap-8">
           {/* Channels */}
           <div className="lg:col-span-5">
             <div className="border border-line">
@@ -67,7 +61,6 @@ export default function ContactPage() {
                 </div>
               </div>
             </div>
-
             <p className="mt-5 text-sm leading-relaxed text-graphite">
               Working hours: Mon–Sat, 9:00–19:00 IST. For quick questions, WhatsApp gets
               the fastest response.
@@ -79,7 +72,7 @@ export default function ContactPage() {
             <ContactForm />
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

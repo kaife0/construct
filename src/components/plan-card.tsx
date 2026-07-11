@@ -5,7 +5,7 @@ import { siteConfig, whatsappUrl } from "@/lib/site";
 /** Ready-made plan card with a schematic thumbnail and key specs. */
 export function PlanCard({ plan }: { plan: Plan }) {
   return (
-    <div className="group flex h-full flex-col bg-surface p-6 transition-colors hover:bg-paper">
+    <div className="group flex h-full flex-col border border-line bg-surface p-4 transition-shadow duration-300 hover:shadow-sm sm:p-6">
       <div className="relative aspect-[4/3] border border-line bg-paper">
         <div className="absolute inset-0 blueprint-grid opacity-60" />
         <svg viewBox="0 0 120 90" className="absolute inset-0 h-full w-full p-3" aria-hidden>
@@ -23,7 +23,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
         <span className="label text-accent-strong">{plan.index}</span>
         <span className="label text-[10px]">{plan.config}</span>
       </div>
-      <h3 className="mt-2 text-lg font-semibold tracking-tight">{plan.title}</h3>
+      <h3 className="mt-2 text-base font-semibold tracking-tight sm:text-lg">{plan.title}</h3>
 
       <ul className="mono mt-3 grid grid-cols-2 gap-y-1.5 text-xs text-graphite">
         <li className="flex items-center gap-1.5"><Ruler size={13} /> {plan.area} sqft</li>
