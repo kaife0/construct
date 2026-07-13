@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Dashboard" };
 
 const sections = [
   { icon: Wrench, title: "Services", desc: "Add, edit or remove the services shown on the site.", href: "/admin/services" },
-  { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the plan catalogue shown on Home and Services." },
+  { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the plan catalogue shown on Home and Services.", href: "/admin/plans" },
   { icon: FolderKanban, title: "Our Work", desc: "Completed and in-progress projects shown on About." },
   { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts." },
   { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form." },
