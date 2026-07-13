@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { listServices, deleteService, type ServiceRecord } from "@/lib/admin-api";
+import { BackLink } from "@/components/admin/back-link";
 
 export function ServicesList() {
   const [services, setServices] = useState<ServiceRecord[] | null>(null);
@@ -34,7 +35,8 @@ export function ServicesList() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <BackLink href="/admin" label="Dashboard" />
+      <div className="mt-4 flex items-center justify-between">
         <div>
           <p className="label">Content</p>
           <h1 className="display mt-3 text-3xl">Services</h1>

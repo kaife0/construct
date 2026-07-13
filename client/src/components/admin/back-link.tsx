@@ -1,0 +1,10 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
+export function BackLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link href={href} className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">
+      <ArrowLeft size={14} /> {label}
+    </Link>
+  );
+}

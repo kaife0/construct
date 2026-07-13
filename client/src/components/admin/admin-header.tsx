@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { LogOut, ExternalLink } from "lucide-react";
 import { fetchMe, logoutRequest, type AdminSession } from "@/lib/admin-auth";
 
 export function AdminHeader() {
@@ -33,6 +33,15 @@ export function AdminHeader() {
 
         <div className="flex items-center gap-4">
           {session && <span className="hidden text-sm text-graphite sm:inline">{session.name}</span>}
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group hidden items-center gap-1.5 text-sm font-medium text-graphite hover:text-ink sm:inline-flex"
+          >
+            View site
+            <ExternalLink size={14} />
+          </Link>
           <button
             type="button"
             onClick={onLogout}

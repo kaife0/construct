@@ -22,6 +22,24 @@ async function jsonRequest<T>(url: string, method: string, body?: unknown): Prom
   return res.json();
 }
 
+/**
+ * Bust the public site's ISR cache for the given tags right after a mutation,
+ * so edits show up immediately instead of waiting out the revalidate window.
+ * Best-effort: a failure here must not block the admin flow — the write
+ * already succeeded, and the cache will still catch up on its own timer.
+ */
+async function revalidate(tags: string[]): Promise<void> {
+  try {
+    await fetch("/api/revalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tags }),
+    });
+  } catch {
+    // ignore — see doc comment
+  }
+}
+
 /** Upload an image, returns its stored URL. */
 export async function uploadImage(file: File, folder: string): Promise<string> {
   const form = new FormData();
@@ -47,7 +65,21 @@ export type ServiceRecord = ServiceInput & { _id: string; slug: string; order: n
 
 export const listServices = () => jsonRequest<ServiceRecord[]>("/api/services", "GET");
 export const getService = (id: string) => jsonRequest<ServiceRecord>(`/api/services/${id}`, "GET");
-export const createService = (data: ServiceInput) => jsonRequest<ServiceRecord>("/api/services", "POST", data);
-export const updateService = (id: string, data: ServiceInput) =>
-  jsonRequest<ServiceRecord>(`/api/services/${id}`, "PUT", data);
-export const deleteService = (id: string) => jsonRequest<{ ok: true }>(`/api/services/${id}`, "DELETE");
+
+export async function createService(data: ServiceInput): Promise<ServiceRecord> {
+  const result = await jsonRequest<ServiceRecord>("/api/services", "POST", data);
+  await revalidate(["services"]);
+  return result;
+}
+
+export async function updateService(id: string, data: ServiceInput): Promise<ServiceRecord> {
+  const result = await jsonRequest<ServiceRecord>(`/api/services/${id}`, "PUT", data);
+  await revalidate(["services"]);
+  return result;
+}
+
+export async function deleteService(id: string): Promise<{ ok: true }> {
+  const result = await jsonRequest<{ ok: true }>(`/api/services/${id}`, "DELETE");
+  await revalidate(["services"]);
+  return result;
+}

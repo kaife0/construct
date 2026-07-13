@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { TextField, TextAreaField } from "@/components/admin/form-fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { BackLink } from "@/components/admin/back-link";
 import { createService, updateService, type ServiceRecord } from "@/lib/admin-api";
 
 export function ServiceForm({ existing }: { existing?: ServiceRecord }) {
@@ -58,9 +59,7 @@ export function ServiceForm({ existing }: { existing?: ServiceRecord }) {
 
   return (
     <div>
-      <Link href="/admin/services" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">
-        <ArrowLeft size={14} /> Services
-      </Link>
+      <BackLink href="/admin/services" label="Services" />
       <h1 className="display mt-4 text-3xl">{editing ? "Edit service" : "New service"}</h1>
 
       <form onSubmit={onSubmit} className="mt-8 grid max-w-2xl gap-6">
