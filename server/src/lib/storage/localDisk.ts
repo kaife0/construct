@@ -24,11 +24,17 @@ export class LocalDiskStorage implements ImageStorage {
   }
 
   async remove(publicUrl: string): Promise<void> {
-    if (!publicUrl.startsWith(`${this.publicBase}/`)) return;
-    const relative = publicUrl.slice(this.publicBase.length + 1);
-    // Guard against path traversal from a tampered DB value.
-    const target = path.resolve(this.root, relative);
-    if (!target.startsWith(path.resolve(this.root))) return;
-    await fs.rm(target, { force: true });
+    try {
+      if (!publicUrl.startsWith(`${this.publicBase}/`)) return;
+      const relative = publicUrl.slice(this.publicBase.length + 1);
+      // Guard against path traversal from a tampered DB value.
+      const target = path.resolve(this.root, relative);
+      if (!target.startsWith(path.resolve(this.root))) return;
+      await fs.rm(target, { force: true });
+    } catch (err) {
+      // Best-effort per the ImageStorage contract — a disk hiccup here must
+      // never fail the DB write/delete that already succeeded.
+      console.error("[storage] failed to remove", publicUrl, err);
+    }
   }
 }

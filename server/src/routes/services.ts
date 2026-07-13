@@ -3,6 +3,7 @@ import { z } from "zod";
 import { Service } from "../models/index.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { uniqueSlug } from "../lib/slug.js";
+import { storage } from "../lib/storage/index.js";
 
 const router = Router();
 
@@ -62,8 +63,15 @@ router.put("/:id", requireAdmin, async (req, res) => {
   if (data.title && data.title !== existing.title) {
     existing.slug = await uniqueSlug(Service, data.title, existing.id);
   }
+  const oldImage = existing.image;
   Object.assign(existing, data);
   await existing.save();
+
+  // Clean up the replaced image file so uploads don't accumulate on disk.
+  if (data.image && data.image !== oldImage) {
+    await storage.remove(oldImage);
+  }
+
   res.json(existing);
 });
 
@@ -73,6 +81,7 @@ router.delete("/:id", requireAdmin, async (req, res) => {
     res.status(404).json({ error: "Service not found." });
     return;
   }
+  await storage.remove(deleted.image);
   res.json({ ok: true });
 });
 
