@@ -83,3 +83,41 @@ export async function deleteService(id: string): Promise<{ ok: true }> {
   await revalidate(["services"]);
   return result;
 }
+
+// ---- Ready-made Plans -------------------------------------------------------
+
+export type PlanInput = {
+  title: string;
+  config: string;
+  area: number;
+  beds: number;
+  baths: number;
+  floors: number;
+  facing: string;
+  tag?: string;
+  image: string;
+  description: string;
+};
+
+export type PlanRecord = PlanInput & { _id: string; slug: string; order: number };
+
+export const listPlans = () => jsonRequest<PlanRecord[]>("/api/plans", "GET");
+export const getPlan = (id: string) => jsonRequest<PlanRecord>(`/api/plans/${id}`, "GET");
+
+export async function createPlan(data: PlanInput): Promise<PlanRecord> {
+  const result = await jsonRequest<PlanRecord>("/api/plans", "POST", data);
+  await revalidate(["plans"]);
+  return result;
+}
+
+export async function updatePlan(id: string, data: PlanInput): Promise<PlanRecord> {
+  const result = await jsonRequest<PlanRecord>(`/api/plans/${id}`, "PUT", data);
+  await revalidate(["plans"]);
+  return result;
+}
+
+export async function deletePlan(id: string): Promise<{ ok: true }> {
+  const result = await jsonRequest<{ ok: true }>(`/api/plans/${id}`, "DELETE");
+  await revalidate(["plans"]);
+  return result;
+}

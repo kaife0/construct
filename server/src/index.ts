@@ -7,6 +7,7 @@ import { connectDB } from "./db.js";
 import { UPLOADS_DIR } from "./lib/storage/index.js";
 import healthRouter from "./routes/health.js";
 import servicesRouter from "./routes/services.js";
+import plansRouter from "./routes/plans.js";
 import authRouter from "./routes/auth.js";
 import uploadRouter from "./routes/upload.js";
 
@@ -37,9 +38,10 @@ app.use("/uploads", express.static(UPLOADS_DIR, { immutable: true, maxAge: "30d"
 
 app.use("/api/health", healthRouter);
 app.use("/api/services", servicesRouter);
+app.use("/api/plans", plansRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/upload", uploadRouter);
-// Further resources (plans, projects, blog, inquiries, calculator-rates,
+// Further resources (projects, blog, inquiries, calculator-rates,
 // site-settings) are added as the admin panel's CRUD screens are built.
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;

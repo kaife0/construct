@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { NumberField, SelectField } from "@/components/calculators/fields";
+import { NumberField, SelectField } from "@/components/fields";
 import { ResultCard } from "@/components/calculators/result-card";
 import { calculateBricks, WALL_THICKNESS_OPTIONS } from "@/lib/calculators";
 import { materialRates } from "@/lib/rates";

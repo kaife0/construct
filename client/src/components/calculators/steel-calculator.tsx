@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { NumberField, SelectField } from "@/components/calculators/fields";
+import { NumberField, SelectField } from "@/components/fields";
 import { ResultCard } from "@/components/calculators/result-card";
 import { calculateSteel, STRUCTURE_TYPE_OPTIONS, type StructureType } from "@/lib/calculators";
 import { materialRates } from "@/lib/rates";

@@ -1,8 +1,9 @@
 import { PlansGrid } from "@/components/plans-grid";
-import { plans } from "@/lib/content";
+import { getPlans } from "@/lib/api";
 
 /** Ready-made plans as a service on its own — same grid used on Home. */
-export function PlansShowcaseSection() {
+export async function PlansShowcaseSection() {
+  const plans = await getPlans();
   return (
     <section id="plans" className="scroll-mt-20 border-t border-line">
       <div className="container-x py-12 md:py-16">

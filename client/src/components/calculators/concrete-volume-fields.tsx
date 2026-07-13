@@ -1,6 +1,6 @@
 "use client";
 
-import { NumberField, SelectField } from "@/components/calculators/fields";
+import { NumberField, SelectField } from "@/components/fields";
 import type { ConcreteGrade } from "@/lib/calculators";
 
 const gradeOptions: { value: ConcreteGrade; label: string }[] = [

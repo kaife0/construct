@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
-import { TextField, TextAreaField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { BackLink } from "@/components/admin/back-link";
 import { createService, updateService, type ServiceRecord } from "@/lib/admin-api";

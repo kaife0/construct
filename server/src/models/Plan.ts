@@ -11,7 +11,8 @@ const PlanSchema = new Schema(
     floors: { type: Number, required: true },
     facing: { type: String, required: true },
     tag: { type: String },
-    image: { type: String },
+    image: { type: String, required: true },
+    description: { type: String, required: true },
     order: { type: Number, default: 0 },
   },
   { timestamps: true }

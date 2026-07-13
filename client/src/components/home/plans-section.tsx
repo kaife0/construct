@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { PlansGrid } from "@/components/plans-grid";
-import { plans } from "@/lib/content";
+import { getPlans } from "@/lib/api";
 
-export function PlansSection() {
+export async function PlansSection() {
+  const plans = await getPlans();
   return (
     <section className="border-t border-line">
       <div className="container-x py-16 md:py-24">

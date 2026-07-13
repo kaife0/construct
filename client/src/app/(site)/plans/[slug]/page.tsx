@@ -3,10 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, BedDouble, Bath, Layers, Ruler, Compass } from "lucide-react";
-import { plans } from "@/lib/content";
+import { getPlans, getPlanBySlug } from "@/lib/api";
+import type { Plan } from "@/lib/content";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const plans = await getPlans();
   return plans.map((p) => ({ slug: p.slug }));
 }
 
@@ -16,11 +18,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const plan = plans.find((p) => p.slug === slug);
+  const plan = await getPlanBySlug(slug);
   return { title: plan?.title ?? "Plan", description: plan?.description };
 }
 
-const specs = (plan: (typeof plans)[number]) => [
+const specs = (plan: Plan) => [
   { icon: Ruler, label: "Built-up area", value: `${plan.area} sqft` },
   { icon: Layers, label: "Floors", value: `${plan.floors}` },
   { icon: BedDouble, label: "Bedrooms", value: `${plan.beds}` },
@@ -34,7 +36,7 @@ export default async function PlanDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const plan = plans.find((p) => p.slug === slug);
+  const plan = await getPlanBySlug(slug);
   if (!plan) notFound();
 
   return (
