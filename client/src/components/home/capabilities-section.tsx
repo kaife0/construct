@@ -2,9 +2,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { ServiceGlyph } from "@/components/service-glyph";
-import { services } from "@/lib/content";
+import { getServices } from "@/lib/api";
 
-export function CapabilitiesSection() {
+export async function CapabilitiesSection() {
+  const services = await getServices();
   return (
     <section className="border-t border-line">
       <div className="container-x py-16 md:py-24">

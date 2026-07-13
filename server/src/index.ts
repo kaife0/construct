@@ -4,20 +4,26 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./db.js";
+import { UPLOADS_DIR } from "./lib/storage/index.js";
 import healthRouter from "./routes/health.js";
 import servicesRouter from "./routes/services.js";
 import authRouter from "./routes/auth.js";
+import uploadRouter from "./routes/upload.js";
 
 const app = express();
 
-app.set("trust proxy", 1); // behind Nginx in production — needed for correct client IPs (rate limiting)
+app.set("trust proxy", 1); // behind a proxy in production — needed for correct client IPs (rate limiting)
 
-app.use(helmet());
+app.use(
+  // crossOriginResourcePolicy is relaxed so the frontend (proxied, but a
+  // different dev origin) can render images served from /uploads.
+  helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } })
+);
 app.use(
   cors({
     // The browser never calls this server cross-origin in normal use — the
-    // Next.js frontend proxies /api/* to here server-side (see client's
-    // next.config.ts rewrites). This stays locked down for defense in depth.
+    // Next.js frontend proxies /api/* and /uploads/* to here server-side (see
+    // client's next.config.ts rewrites). This stays locked down for defense in depth.
     origin: process.env.CORS_ORIGIN?.split(",") ?? ["http://localhost:3000"],
     credentials: true,
   })
@@ -25,9 +31,14 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+// Uploaded images, served statically with long-lived caching (filenames are
+// content-random, so they're safe to cache immutably).
+app.use("/uploads", express.static(UPLOADS_DIR, { immutable: true, maxAge: "30d" }));
+
 app.use("/api/health", healthRouter);
 app.use("/api/services", servicesRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/admin/upload", uploadRouter);
 // Further resources (plans, projects, blog, inquiries, calculator-rates,
 // site-settings) are added as the admin panel's CRUD screens are built.
 

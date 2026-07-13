@@ -8,8 +8,10 @@ const nextConfig: NextConfig = {
       // Proxies to the separate Express server (../server). Keeps the browser
       // talking same-origin, which is what lets the admin session cookie work
       // without cross-site cookie headaches — and mirrors how production will
-      // be set up (one domain, Nginx routing /api to the Node backend).
+      // be set up (one domain routing /api and /uploads to the Node backend).
       { source: "/api/:path*", destination: `${API_URL}/api/:path*` },
+      // Admin-uploaded images served by the backend.
+      { source: "/uploads/:path*", destination: `${API_URL}/uploads/:path*` },
     ];
   },
   images: {

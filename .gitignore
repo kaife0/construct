@@ -22,6 +22,9 @@ out/
 build/
 dist/
 
+# admin-uploaded images (persisted on the server disk, never committed)
+uploads/
+
 # misc
 .DS_Store
 *.pem

@@ -1,78 +1,14 @@
 /**
- * Placeholder services content. Maps 1:1 to the future `Service` model served
- * from /server (MongoDB) and managed from the admin panel.
+ * Service type. The data now lives in MongoDB (served by ../server) and is
+ * fetched via `getServices()` in `@/lib/api`; it's edited from the admin panel.
+ * The original placeholder data was migrated with the server's seed:services script.
  */
-
 export type Service = {
   slug: string;
-  index: string;
+  index: string; // display number ("01"…), derived from order at fetch time
   title: string;
   summary: string;
   description: string;
   deliverables: string[];
-  /** Placeholder photo — replace with the client's real project image. */
   image: string;
 };
-
-export const services: Service[] = [
-  {
-    slug: "house-planning",
-    index: "01",
-    title: "House Planning",
-    summary: "Site analysis, space planning and municipal-ready layouts.",
-    description:
-      "We translate your requirements, plot and budget into an efficient, Vastu-conscious layout that passes local building bylaws — optimising light, ventilation and circulation before a single brick is laid.",
-    deliverables: ["Site & plot analysis", "Zoning & floor layouts", "Bylaw / setback compliance", "Area statement"],
-    image: "https://images.unsplash.com/photo-1721244654392-9c912a6eb236?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    slug: "structural-design",
-    index: "02",
-    title: "Structural Design",
-    summary: "RCC & steel design — safe, economical and IS-code compliant.",
-    description:
-      "Detailed structural analysis and design of foundations, columns, beams and slabs. We balance safety and cost, delivering bar-bending schedules your contractor can build from directly.",
-    deliverables: ["Load & analysis calculations", "RCC / steel detailing", "Foundation design", "Bar-bending schedule"],
-    image: "https://images.unsplash.com/photo-1530863506128-dc9eb5c3e0fc?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    slug: "interior-design",
-    index: "03",
-    title: "Interior Design",
-    summary: "Functional, warm interiors detailed down to the finish.",
-    description:
-      "Space-efficient interiors with material palettes, furniture layouts and lighting plans — designed to be beautiful, buildable and within budget.",
-    deliverables: ["Concept & mood boards", "Furniture layouts", "Material & finish schedule", "Lighting plan"],
-    image: "https://images.unsplash.com/photo-1724582586529-62622e50c0b3?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    slug: "2d-3d-plans",
-    index: "04",
-    title: "2D & 3D Plans",
-    summary: "Working drawings and photoreal 3D visualisation.",
-    description:
-      "Precise 2D working drawings for construction, plus photorealistic 3D elevations and walkthroughs so you can see the finished home before you build it.",
-    deliverables: ["2D working drawings", "3D elevations", "Photoreal renders", "Walkthrough (on request)"],
-    image: "https://images.unsplash.com/photo-1563183193-ceaa9ee013e8?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    slug: "estimation-costing",
-    index: "05",
-    title: "Estimation & Costing",
-    summary: "Transparent BOQs and realistic project budgets.",
-    description:
-      "Detailed quantity take-offs and bills of quantities so you know material and labour costs upfront — no surprises mid-construction.",
-    deliverables: ["Quantity take-off", "Bill of quantities (BOQ)", "Rate analysis", "Budget forecast"],
-    image: "https://images.unsplash.com/photo-1711437757489-f739a581c55b?w=800&q=80&auto=format&fit=crop",
-  },
-  {
-    slug: "site-supervision",
-    index: "06",
-    title: "Site Supervision",
-    summary: "Quality checks and progress oversight on site.",
-    description:
-      "Periodic site visits and quality audits to ensure work matches the drawings and specifications — keeping your project on schedule and to standard.",
-    deliverables: ["Stage-wise inspection", "Quality & material audit", "Progress reporting", "Contractor coordination"],
-    image: "https://images.unsplash.com/photo-1760963301666-582b92218a19?w=800&q=80&auto=format&fit=crop",
-  },
-];

@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/page-header";
 import { ServiceGrid } from "@/components/services/service-grid";
 import { PlansShowcaseSection } from "@/components/services/plans-showcase-section";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
-import { services } from "@/lib/content";
+import { getServices } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -11,7 +11,8 @@ export const metadata: Metadata = {
     "House planning, structural design, interiors, 2D/3D plans, estimation, site supervision and ready-made plans.",
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
   return (
     <>
       <PageHeader
