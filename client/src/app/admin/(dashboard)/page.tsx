@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Wrench, Home as HomeIcon, FolderKanban, Newspaper, Inbox, Calculator, Settings } from "lucide-react";
+import Link from "next/link";
+import { Wrench, Home as HomeIcon, FolderKanban, Newspaper, Inbox, Calculator, Settings, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 const sections = [
-  { icon: Wrench, title: "Services", desc: "Add, edit or remove the six services shown on the site." },
+  { icon: Wrench, title: "Services", desc: "Add, edit or remove the services shown on the site.", href: "/admin/services" },
   { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the plan catalogue shown on Home and Services." },
   { icon: FolderKanban, title: "Our Work", desc: "Completed and in-progress projects shown on About." },
   { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts." },
@@ -23,16 +24,34 @@ export default function AdminDashboardPage() {
       </p>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {sections.map((s) => (
-          <div key={s.title} className="border border-line bg-surface p-5 opacity-60">
-            <span className="grid h-10 w-10 place-items-center border border-line-strong text-graphite">
-              <s.icon size={18} />
-            </span>
-            <h2 className="mt-4 text-base font-semibold tracking-tight">{s.title}</h2>
-            <p className="mt-1.5 text-sm text-graphite">{s.desc}</p>
-            <span className="label mt-4 inline-block text-[10px] text-accent-strong">Coming soon</span>
-          </div>
-        ))}
+        {sections.map((s) =>
+          s.href ? (
+            <Link
+              key={s.title}
+              href={s.href}
+              className="group border border-line bg-surface p-5 transition-shadow hover:shadow-sm"
+            >
+              <div className="flex items-start justify-between">
+                <span className="grid h-10 w-10 place-items-center border border-ink text-ink">
+                  <s.icon size={18} />
+                </span>
+                <ArrowUpRight size={18} className="text-muted transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink" />
+              </div>
+              <h2 className="mt-4 text-base font-semibold tracking-tight">{s.title}</h2>
+              <p className="mt-1.5 text-sm text-graphite">{s.desc}</p>
+              <span className="label mt-4 inline-block text-[10px] text-accent-strong">Manage →</span>
+            </Link>
+          ) : (
+            <div key={s.title} className="border border-line bg-surface p-5 opacity-60">
+              <span className="grid h-10 w-10 place-items-center border border-line-strong text-graphite">
+                <s.icon size={18} />
+              </span>
+              <h2 className="mt-4 text-base font-semibold tracking-tight">{s.title}</h2>
+              <p className="mt-1.5 text-sm text-graphite">{s.desc}</p>
+              <span className="label mt-4 inline-block text-[10px] text-muted">Coming soon</span>
+            </div>
+          )
+        )}
       </div>
     </div>
   );
