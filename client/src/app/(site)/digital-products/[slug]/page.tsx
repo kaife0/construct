@@ -60,7 +60,7 @@ export default async function DigitalProductCategoryPage({
               <p className="text-sm text-graphite">Plans are being added — check back soon.</p>
             )
           ) : products.length > 0 ? (
-            <ProductGrid products={products} />
+            <ProductGrid products={products} categorySlug={slug} />
           ) : (
             <p className="text-sm text-graphite">Products are being added — check back soon.</p>
           )}

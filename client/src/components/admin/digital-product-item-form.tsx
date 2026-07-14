@@ -22,6 +22,7 @@ export function DigitalProductItemForm({
   const [description, setDescription] = useState(existing?.description ?? "");
   const [image, setImage] = useState(existing?.image ?? "");
   const [price, setPrice] = useState(existing?.price ?? 0);
+  const [features, setFeatures] = useState((existing?.features ?? []).join("\n"));
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -44,6 +45,7 @@ export function DigitalProductItemForm({
       description: description.trim(),
       image,
       price: price > 0 ? price : undefined,
+      features: features.split("\n").map((f) => f.trim()).filter(Boolean),
     };
 
     setSaving(true);
@@ -76,6 +78,14 @@ export function DigitalProductItemForm({
       <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
       <ImageUploader label="Image" value={image} folder="digital-products" onChange={setImage} required />
       <NumberField label="Price" suffix="₹" value={price} onChange={setPrice} step={1} />
+      <TextAreaField
+        label="Features"
+        value={features}
+        onChange={setFeatures}
+        rows={5}
+        hint="One per line. Shown as tags on the product's detail page."
+        placeholder={"DWG format\nEditable layers\nMetric units"}
+      />
     </AdminFormShell>
   );
 }

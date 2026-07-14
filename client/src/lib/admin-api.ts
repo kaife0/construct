@@ -145,6 +145,7 @@ export type DigitalProductInput = {
   description: string;
   image: string;
   price?: number;
+  features: string[];
 };
 export type DigitalProductRecord = DigitalProductInput & { _id: string; slug: string; order: number };
 
