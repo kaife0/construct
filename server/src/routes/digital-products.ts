@@ -13,6 +13,7 @@ const schema = z.object({
   description: z.string().trim().min(1, "Description is required."),
   image: z.string().trim().min(1, "Image is required."),
   price: z.number().nonnegative().optional(),
+  features: z.array(z.string().trim().min(1)).default([]),
   order: z.number().int().optional(),
 });
 

@@ -69,3 +69,7 @@ export async function getDigitalProducts(categorySlug: string): Promise<DigitalP
     await fetchList<DigitalProductDoc>(`digital-products?category=${encodeURIComponent(categorySlug)}`, "digital-product-items")
   );
 }
+
+export async function getDigitalProductBySlug(categorySlug: string, productSlug: string): Promise<DigitalProduct | null> {
+  return findBySlug(await getDigitalProducts(categorySlug), productSlug);
+}

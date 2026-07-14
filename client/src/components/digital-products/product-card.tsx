@@ -1,14 +1,12 @@
+import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import type { DigitalProduct } from "@/lib/content";
-import { siteConfig, whatsappUrl } from "@/lib/site";
 
-export function ProductCard({ product }: { product: DigitalProduct }) {
+export function ProductCard({ product, categorySlug }: { product: DigitalProduct; categorySlug: string }) {
   return (
-    <a
-      href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in "${product.title}".`)}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      href={`/digital-products/${categorySlug}/${product.slug}`}
       className="group flex h-full flex-col border border-line bg-surface transition-shadow duration-300 hover:shadow-sm"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -34,9 +32,9 @@ export function ProductCard({ product }: { product: DigitalProduct }) {
         </div>
         <p className="mt-1.5 line-clamp-2 text-xs leading-relaxed text-graphite sm:text-sm">{product.description}</p>
         <span className="label mt-auto pt-4 text-[10px] text-ink">
-          {product.price ? `₹${product.price.toLocaleString("en-IN")} · Enquire →` : "Enquire →"}
+          {product.price ? `₹${product.price.toLocaleString("en-IN")} · View details →` : "View details →"}
         </span>
       </div>
-    </a>
+    </Link>
   );
 }
