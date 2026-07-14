@@ -127,15 +127,34 @@ export type DigitalProductCategoryInput = {
 };
 export type DigitalProductCategoryRecord = DigitalProductCategoryInput & { _id: string; slug: string; order: number };
 
-const digitalProducts = crudClient<DigitalProductCategoryInput, DigitalProductCategoryRecord>(
+const digitalProductCategories = crudClient<DigitalProductCategoryInput, DigitalProductCategoryRecord>(
   "digital-product-categories",
   "digital-products"
 );
-export const listDigitalProductCategories = digitalProducts.list;
-export const getDigitalProductCategory = digitalProducts.get;
-export const createDigitalProductCategory = digitalProducts.create;
-export const updateDigitalProductCategory = digitalProducts.update;
-export const deleteDigitalProductCategory = digitalProducts.remove;
+export const listDigitalProductCategories = digitalProductCategories.list;
+export const getDigitalProductCategory = digitalProductCategories.get;
+export const createDigitalProductCategory = digitalProductCategories.create;
+export const updateDigitalProductCategory = digitalProductCategories.update;
+export const deleteDigitalProductCategory = digitalProductCategories.remove;
+
+// ---- Digital Products (items listed within a category) ---------------------
+
+export type DigitalProductInput = {
+  categoryId: string;
+  title: string;
+  description: string;
+  image: string;
+  price?: number;
+};
+export type DigitalProductRecord = DigitalProductInput & { _id: string; slug: string; order: number };
+
+const digitalProducts = crudClient<DigitalProductInput, DigitalProductRecord>("digital-products", "digital-product-items");
+export const listDigitalProducts = (categoryId: string) =>
+  jsonRequest<DigitalProductRecord[]>(`/api/digital-products?categoryId=${categoryId}`, "GET");
+export const getDigitalProduct = digitalProducts.get;
+export const createDigitalProduct = digitalProducts.create;
+export const updateDigitalProduct = digitalProducts.update;
+export const deleteDigitalProduct = digitalProducts.remove;
 
 // ---- Inquiries ---------------------------------------------------------
 

@@ -22,6 +22,11 @@ export function DigitalProductsList() {
           {c.showPlansCatalog && <span className="label ml-2 text-[9px] text-accent-strong">SHOWS PLANS</span>}
         </>
       )}
+      extraAction={(c) =>
+        c.showPlansCatalog
+          ? { href: "/admin/plans", label: "Manage plans →" }
+          : { href: `/admin/digital-products/${c._id}/products`, label: "Manage products →" }
+      }
     />
   );
 }

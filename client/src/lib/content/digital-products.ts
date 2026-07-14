@@ -16,3 +16,18 @@ export type DigitalProductCategory = {
   image: string;
   showPlansCatalog: boolean;
 };
+
+/**
+ * A single item listed within a category — for any category other than the
+ * specialised "Ready-made House Plans" one (that keeps using the `Plan` type,
+ * which has house-specific fields like beds/baths). Fetched scoped to a
+ * category via `getDigitalProducts(categorySlug)`.
+ */
+export type DigitalProduct = {
+  slug: string;
+  index: string;
+  title: string;
+  description: string;
+  image: string;
+  price?: number;
+};

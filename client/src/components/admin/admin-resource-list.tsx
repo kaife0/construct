@@ -23,6 +23,9 @@ export function AdminResourceList<T>({
   getImage,
   getTitle,
   renderSubtitle,
+  extraAction,
+  backHref = "/admin",
+  backLabel = "Dashboard",
 }: {
   title: string;
   newHref: string;
@@ -35,6 +38,10 @@ export function AdminResourceList<T>({
   getImage: (item: T) => string | undefined;
   getTitle: (item: T) => string;
   renderSubtitle: (item: T) => ReactNode;
+  /** Optional secondary link per row, e.g. "Products →" for a category row. */
+  extraAction?: (item: T) => { href: string; label: string };
+  backHref?: string;
+  backLabel?: string;
 }) {
   const [items, setItems] = useState<T[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +70,7 @@ export function AdminResourceList<T>({
 
   return (
     <div>
-      <BackLink href="/admin" label="Dashboard" />
+      <BackLink href={backHref} label={backLabel} />
       <div className="mt-4 flex items-center justify-between">
         <div>
           <p className="label">Content</p>
@@ -95,7 +102,12 @@ export function AdminResourceList<T>({
                   <p className="truncate font-medium">{getTitle(item)}</p>
                   <p className="truncate text-sm text-graphite">{renderSubtitle(item)}</p>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-3">
+                  {extraAction && (
+                    <Link href={extraAction(item).href} className="label whitespace-nowrap text-[10px] text-accent-strong hover:underline">
+                      {extraAction(item).label}
+                    </Link>
+                  )}
                   <Link
                     href={editHref(item)}
                     className="grid h-9 w-9 place-items-center border border-line text-graphite transition-colors hover:border-ink hover:text-ink"

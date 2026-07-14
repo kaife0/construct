@@ -8,7 +8,7 @@
  * On failure it returns an empty list rather than throwing, so a transient
  * backend hiccup degrades gracefully instead of crashing the page.
  */
-import type { Service, Plan, DigitalProductCategory } from "@/lib/content";
+import type { Service, Plan, DigitalProductCategory, DigitalProduct } from "@/lib/content";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:4000";
 const REVALIDATE_SECONDS = 30;
@@ -59,4 +59,13 @@ export async function getDigitalProductCategories(): Promise<DigitalProductCateg
 
 export async function getDigitalProductCategoryBySlug(slug: string): Promise<DigitalProductCategory | null> {
   return findBySlug(await getDigitalProductCategories(), slug);
+}
+
+type DigitalProductDoc = Omit<DigitalProduct, "index"> & { order: number };
+
+/** Products listed within one category — e.g. the CAD blocks inside a "CAD Blocks" category. */
+export async function getDigitalProducts(categorySlug: string): Promise<DigitalProduct[]> {
+  return withDisplayIndex(
+    await fetchList<DigitalProductDoc>(`digital-products?category=${encodeURIComponent(categorySlug)}`, "digital-product-items")
+  );
 }

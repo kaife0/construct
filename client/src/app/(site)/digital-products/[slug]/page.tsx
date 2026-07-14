@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getPlans } from "@/lib/api";
+import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getPlans, getDigitalProducts } from "@/lib/api";
 import { PlansGrid } from "@/components/plans-grid";
+import { ProductGrid } from "@/components/digital-products/product-grid";
 
 export async function generateStaticParams() {
   const categories = await getDigitalProductCategories();
@@ -31,6 +31,7 @@ export default async function DigitalProductCategoryPage({
   if (!category) notFound();
 
   const plans = category.showPlansCatalog ? await getPlans() : [];
+  const products = category.showPlansCatalog ? [] : await getDigitalProducts(slug);
 
   return (
     <article>
@@ -49,31 +50,21 @@ export default async function DigitalProductCategoryPage({
       </header>
 
       <div className="container-x py-10 md:py-14">
-        <div className="relative aspect-[21/9] w-full overflow-hidden border border-line">
-          <Image
-            src={category.image}
-            alt={category.title}
-            fill
-            unoptimized
-            sizes="100vw"
-            className="object-cover"
-            priority
-          />
-        </div>
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-graphite">{category.description}</p>
+        <p className="max-w-2xl text-base leading-relaxed text-graphite">{category.description}</p>
 
-        {category.showPlansCatalog && (
-          <div className="mt-12">
-            <span className="label text-[10px]">BROWSE PLANS</span>
-            <div className="mt-6">
-              {plans.length > 0 ? (
-                <PlansGrid plans={plans} lgCols={3} />
-              ) : (
-                <p className="text-sm text-graphite">Plans are being added — check back soon.</p>
-              )}
-            </div>
-          </div>
-        )}
+        <div className="mt-10">
+          {category.showPlansCatalog ? (
+            plans.length > 0 ? (
+              <PlansGrid plans={plans} lgCols={3} />
+            ) : (
+              <p className="text-sm text-graphite">Plans are being added — check back soon.</p>
+            )
+          ) : products.length > 0 ? (
+            <ProductGrid products={products} />
+          ) : (
+            <p className="text-sm text-graphite">Products are being added — check back soon.</p>
+          )}
+        </div>
       </div>
     </article>
   );
