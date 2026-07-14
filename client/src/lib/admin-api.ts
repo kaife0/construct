@@ -40,6 +40,30 @@ async function revalidate(tags: string[]): Promise<void> {
   }
 }
 
+/** Standard list/get/create/update/delete client for a slugged admin resource. */
+function crudClient<Input, Rec>(endpoint: string, tag: string) {
+  const base = `/api/${endpoint}`;
+  return {
+    list: () => jsonRequest<Rec[]>(base, "GET"),
+    get: (id: string) => jsonRequest<Rec>(`${base}/${id}`, "GET"),
+    create: async (data: Input) => {
+      const result = await jsonRequest<Rec>(base, "POST", data);
+      await revalidate([tag]);
+      return result;
+    },
+    update: async (id: string, data: Input) => {
+      const result = await jsonRequest<Rec>(`${base}/${id}`, "PUT", data);
+      await revalidate([tag]);
+      return result;
+    },
+    remove: async (id: string) => {
+      const result = await jsonRequest<{ ok: true }>(`${base}/${id}`, "DELETE");
+      await revalidate([tag]);
+      return result;
+    },
+  };
+}
+
 /** Upload an image, returns its stored URL. */
 export async function uploadImage(file: File, folder: string): Promise<string> {
   const form = new FormData();
@@ -60,29 +84,14 @@ export type ServiceInput = {
   deliverables: string[];
   image: string;
 };
-
 export type ServiceRecord = ServiceInput & { _id: string; slug: string; order: number };
 
-export const listServices = () => jsonRequest<ServiceRecord[]>("/api/services", "GET");
-export const getService = (id: string) => jsonRequest<ServiceRecord>(`/api/services/${id}`, "GET");
-
-export async function createService(data: ServiceInput): Promise<ServiceRecord> {
-  const result = await jsonRequest<ServiceRecord>("/api/services", "POST", data);
-  await revalidate(["services"]);
-  return result;
-}
-
-export async function updateService(id: string, data: ServiceInput): Promise<ServiceRecord> {
-  const result = await jsonRequest<ServiceRecord>(`/api/services/${id}`, "PUT", data);
-  await revalidate(["services"]);
-  return result;
-}
-
-export async function deleteService(id: string): Promise<{ ok: true }> {
-  const result = await jsonRequest<{ ok: true }>(`/api/services/${id}`, "DELETE");
-  await revalidate(["services"]);
-  return result;
-}
+const services = crudClient<ServiceInput, ServiceRecord>("services", "services");
+export const listServices = services.list;
+export const getService = services.get;
+export const createService = services.create;
+export const updateService = services.update;
+export const deleteService = services.remove;
 
 // ---- Ready-made Plans -------------------------------------------------------
 
@@ -98,29 +107,14 @@ export type PlanInput = {
   image: string;
   description: string;
 };
-
 export type PlanRecord = PlanInput & { _id: string; slug: string; order: number };
 
-export const listPlans = () => jsonRequest<PlanRecord[]>("/api/plans", "GET");
-export const getPlan = (id: string) => jsonRequest<PlanRecord>(`/api/plans/${id}`, "GET");
-
-export async function createPlan(data: PlanInput): Promise<PlanRecord> {
-  const result = await jsonRequest<PlanRecord>("/api/plans", "POST", data);
-  await revalidate(["plans"]);
-  return result;
-}
-
-export async function updatePlan(id: string, data: PlanInput): Promise<PlanRecord> {
-  const result = await jsonRequest<PlanRecord>(`/api/plans/${id}`, "PUT", data);
-  await revalidate(["plans"]);
-  return result;
-}
-
-export async function deletePlan(id: string): Promise<{ ok: true }> {
-  const result = await jsonRequest<{ ok: true }>(`/api/plans/${id}`, "DELETE");
-  await revalidate(["plans"]);
-  return result;
-}
+const plans = crudClient<PlanInput, PlanRecord>("plans", "plans");
+export const listPlans = plans.list;
+export const getPlan = plans.get;
+export const createPlan = plans.create;
+export const updatePlan = plans.update;
+export const deletePlan = plans.remove;
 
 // ---- Digital Product Categories --------------------------------------------
 
@@ -131,36 +125,17 @@ export type DigitalProductCategoryInput = {
   image: string;
   showPlansCatalog: boolean;
 };
-
 export type DigitalProductCategoryRecord = DigitalProductCategoryInput & { _id: string; slug: string; order: number };
 
-export const listDigitalProductCategories = () =>
-  jsonRequest<DigitalProductCategoryRecord[]>("/api/digital-product-categories", "GET");
-export const getDigitalProductCategory = (id: string) =>
-  jsonRequest<DigitalProductCategoryRecord>(`/api/digital-product-categories/${id}`, "GET");
-
-export async function createDigitalProductCategory(
-  data: DigitalProductCategoryInput
-): Promise<DigitalProductCategoryRecord> {
-  const result = await jsonRequest<DigitalProductCategoryRecord>("/api/digital-product-categories", "POST", data);
-  await revalidate(["digital-products"]);
-  return result;
-}
-
-export async function updateDigitalProductCategory(
-  id: string,
-  data: DigitalProductCategoryInput
-): Promise<DigitalProductCategoryRecord> {
-  const result = await jsonRequest<DigitalProductCategoryRecord>(`/api/digital-product-categories/${id}`, "PUT", data);
-  await revalidate(["digital-products"]);
-  return result;
-}
-
-export async function deleteDigitalProductCategory(id: string): Promise<{ ok: true }> {
-  const result = await jsonRequest<{ ok: true }>(`/api/digital-product-categories/${id}`, "DELETE");
-  await revalidate(["digital-products"]);
-  return result;
-}
+const digitalProducts = crudClient<DigitalProductCategoryInput, DigitalProductCategoryRecord>(
+  "digital-product-categories",
+  "digital-products"
+);
+export const listDigitalProductCategories = digitalProducts.list;
+export const getDigitalProductCategory = digitalProducts.get;
+export const createDigitalProductCategory = digitalProducts.create;
+export const updateDigitalProductCategory = digitalProducts.update;
+export const deleteDigitalProductCategory = digitalProducts.remove;
 
 // ---- Inquiries ---------------------------------------------------------
 
@@ -178,8 +153,6 @@ export type InquiryRecord = {
 };
 
 export const listInquiries = () => jsonRequest<InquiryRecord[]>("/api/inquiries", "GET");
-
 export const setInquiryStatus = (id: string, status: InquiryStatus) =>
   jsonRequest<InquiryRecord>(`/api/inquiries/${id}`, "PATCH", { status });
-
 export const deleteInquiry = (id: string) => jsonRequest<{ ok: true }>(`/api/inquiries/${id}`, "DELETE");

@@ -64,7 +64,7 @@ export default async function ServiceDetailPage({
 
           {service.deliverables.length > 0 && (
             <div className="mt-10">
-              <span className="label text-[10px]">WHAT'S INCLUDED</span>
+              <span className="label text-[10px]">WHAT&apos;S INCLUDED</span>
               <ul className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
                 {service.deliverables.map((d) => (
                   <li key={d} className="flex items-start gap-2.5 text-sm text-graphite">

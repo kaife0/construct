@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Check, ArrowUpRight, AlertCircle } from "lucide-react";
+import { Check, ArrowUpRight } from "lucide-react";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 import { submitInquiry } from "@/lib/inquiries";
 
+const EMPTY_FORM = { name: "", phone: "", email: "", service: "", message: "" };
+
 /**
- * Reusable inquiry form. Saves the lead to the DB (admin inbox) and offers a
- * WhatsApp shortcut for people who'd rather chat immediately.
+ * One action: opens WhatsApp with the enquiry pre-filled and saves the same
+ * lead to the DB (categorised by service) for the admin inbox — not two
+ * separate paths. WhatsApp opens synchronously on submit (before any await)
+ * so popup blockers don't intercept it; the DB save happens in the
+ * background and never blocks or fails the WhatsApp flow.
  *
- * - `fixedService`  — lock the enquiry to one service (service detail pages).
+ * - `fixedService`   — lock the enquiry to one service (service detail pages).
  * - `serviceOptions` — show a service dropdown (home contact section).
  */
 export function InquiryForm({
@@ -20,45 +25,33 @@ export function InquiryForm({
   fixedService?: string;
   serviceOptions?: string[];
 }) {
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    service: fixedService ?? serviceOptions?.[0] ?? "",
-    message: "",
-  });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
-  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({ ...EMPTY_FORM, service: fixedService ?? serviceOptions?.[0] ?? "" });
+  const [sent, setSent] = useState(false);
 
   const update =
     (k: keyof typeof form) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
       setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setStatus("sending");
-    try {
-      await submitInquiry({
-        name: form.name,
-        phone: form.phone,
-        email: form.email || undefined,
-        service: fixedService ?? (form.service || undefined),
-        message: form.message,
-      });
-      setStatus("sent");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send. Try again.");
-      setStatus("idle");
-    }
-  };
+    const service = fixedService ?? (form.service || undefined);
 
-  const whatsappText =
-    `Hi ${siteConfig.name}!` +
-    (fixedService ? `\nService: ${fixedService}` : form.service ? `\nService: ${form.service}` : "") +
-    (form.name ? `\nName: ${form.name}` : "") +
-    (form.message ? `\nMessage: ${form.message}` : "");
+    const text =
+      `Hi ${siteConfig.name}!` +
+      (service ? `\nService: ${service}` : "") +
+      `\nName: ${form.name}` +
+      `\nMessage: ${form.message}`;
+
+    window.open(whatsappUrl(text), "_blank", "noopener,noreferrer");
+    setSent(true);
+
+    submitInquiry({ ...form, email: form.email || undefined, service }).catch(() => {
+      // Best-effort: WhatsApp already has the enquiry, so a save failure
+      // here just means it's missing from the admin inbox — not worth
+      // interrupting the user over.
+    });
+  };
 
   const inputCls =
     "w-full border border-line bg-paper px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-ink";
@@ -71,7 +64,7 @@ export function InquiryForm({
       </div>
 
       <AnimatePresence mode="wait">
-        {status === "sent" ? (
+        {sent ? (
           <motion.div
             key="done"
             initial={{ opacity: 0, y: 8 }}
@@ -82,40 +75,22 @@ export function InquiryForm({
               <Check size={22} />
             </span>
             <div>
-              <h3 className="text-lg font-semibold">Thanks — we&apos;ve got your message.</h3>
-              <p className="mt-1 text-sm text-graphite">
-                We usually reply within a day. Prefer to chat now?
-              </p>
+              <h3 className="text-lg font-semibold">Opening WhatsApp…</h3>
+              <p className="mt-1 text-sm text-graphite">Send the pre-filled message to complete your enquiry.</p>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={whatsappUrl(whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-sm bg-accent px-5 py-2.5 text-sm font-medium text-white"
-              >
-                Chat on WhatsApp <ArrowUpRight size={16} />
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setForm({ name: "", phone: "", email: "", service: fixedService ?? serviceOptions?.[0] ?? "", message: "" });
-                  setStatus("idle");
-                }}
-                className="label text-ink underline-offset-4 hover:underline"
-              >
-                Send another
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setForm({ ...EMPTY_FORM, service: fixedService ?? serviceOptions?.[0] ?? "" });
+                setSent(false);
+              }}
+              className="label text-ink underline-offset-4 hover:underline"
+            >
+              Send another
+            </button>
           </motion.div>
         ) : (
-          <motion.form
-            key="form"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onSubmit={onSubmit}
-            className="grid gap-4"
-          >
+          <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={onSubmit} className="grid gap-4">
             {fixedService && (
               <p className="text-sm text-graphite">
                 Enquiry about <span className="font-semibold text-ink">{fixedService}</span>
@@ -150,30 +125,13 @@ export function InquiryForm({
               <textarea required value={form.message} onChange={update("message")} rows={4} placeholder="Tell us about your plot, budget and timeline…" className={inputCls} />
             </div>
 
-            {error && (
-              <div className="flex items-start gap-2 border border-accent/30 bg-accent-soft px-3.5 py-2.5 text-sm text-accent-strong">
-                <AlertCircle size={16} className="mt-0.5 shrink-0" /> {error}
-              </div>
-            )}
-
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="submit"
-                disabled={status === "sending"}
-                className="inline-flex items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper transition-opacity disabled:opacity-50"
-              >
-                {status === "sending" ? "Sending…" : "Send inquiry"}
-              </button>
-              <a
-                href={whatsappUrl(whatsappText)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 text-sm font-medium text-graphite hover:text-ink"
-              >
-                or chat on WhatsApp
-                <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            </div>
+            <button
+              type="submit"
+              className="group inline-flex w-fit items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"
+            >
+              Send via WhatsApp
+              <ArrowUpRight size={17} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </button>
           </motion.form>
         )}
       </AnimatePresence>
