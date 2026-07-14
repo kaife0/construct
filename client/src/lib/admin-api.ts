@@ -122,6 +122,46 @@ export async function deletePlan(id: string): Promise<{ ok: true }> {
   return result;
 }
 
+// ---- Digital Product Categories --------------------------------------------
+
+export type DigitalProductCategoryInput = {
+  title: string;
+  summary: string;
+  description: string;
+  image: string;
+  showPlansCatalog: boolean;
+};
+
+export type DigitalProductCategoryRecord = DigitalProductCategoryInput & { _id: string; slug: string; order: number };
+
+export const listDigitalProductCategories = () =>
+  jsonRequest<DigitalProductCategoryRecord[]>("/api/digital-product-categories", "GET");
+export const getDigitalProductCategory = (id: string) =>
+  jsonRequest<DigitalProductCategoryRecord>(`/api/digital-product-categories/${id}`, "GET");
+
+export async function createDigitalProductCategory(
+  data: DigitalProductCategoryInput
+): Promise<DigitalProductCategoryRecord> {
+  const result = await jsonRequest<DigitalProductCategoryRecord>("/api/digital-product-categories", "POST", data);
+  await revalidate(["digital-products"]);
+  return result;
+}
+
+export async function updateDigitalProductCategory(
+  id: string,
+  data: DigitalProductCategoryInput
+): Promise<DigitalProductCategoryRecord> {
+  const result = await jsonRequest<DigitalProductCategoryRecord>(`/api/digital-product-categories/${id}`, "PUT", data);
+  await revalidate(["digital-products"]);
+  return result;
+}
+
+export async function deleteDigitalProductCategory(id: string): Promise<{ ok: true }> {
+  const result = await jsonRequest<{ ok: true }>(`/api/digital-product-categories/${id}`, "DELETE");
+  await revalidate(["digital-products"]);
+  return result;
+}
+
 // ---- Inquiries ---------------------------------------------------------
 
 export type InquiryStatus = "new" | "contacted" | "closed";

@@ -44,7 +44,7 @@ export function InquiryForm({
         name: form.name,
         phone: form.phone,
         email: form.email || undefined,
-        service: fixedService ?? form.service || undefined,
+        service: fixedService ?? (form.service || undefined),
         message: form.message,
       });
       setStatus("sent");

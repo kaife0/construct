@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Wrench, Home as HomeIcon, FolderKanban, Newspaper, Inbox, Calculator, Settings, ArrowUpRight } from "lucide-react";
+import { Wrench, Package, Home as HomeIcon, FolderKanban, Newspaper, Inbox, Calculator, Settings, ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 const sections = [
   { icon: Wrench, title: "Services", desc: "Add, edit or remove the services shown on the site.", href: "/admin/services" },
-  { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the plan catalogue shown on Home and Services.", href: "/admin/plans" },
+  { icon: Package, title: "Digital Products", desc: "Manage product categories (e.g. Ready-made House Plans).", href: "/admin/digital-products" },
+  { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the individual plans shown under Digital Products.", href: "/admin/plans" },
   { icon: FolderKanban, title: "Our Work", desc: "Completed and in-progress projects shown on About." },
   { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts." },
-  { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form." },
+  { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form and service pages.", href: "/admin/inquiries" },
   { icon: Calculator, title: "Calculator Rates", desc: "Update ₹ material rates used by the calculators." },
   { icon: Settings, title: "Site Settings", desc: "Profile, contact details and socials." },
 ];
