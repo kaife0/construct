@@ -9,7 +9,7 @@ const sections = [
   { icon: Package, title: "Digital Products", desc: "Manage product categories (e.g. Ready-made House Plans).", href: "/admin/digital-products" },
   { icon: HomeIcon, title: "Ready-made Plans", desc: "Manage the individual plans shown under Digital Products.", href: "/admin/plans" },
   { icon: FolderKanban, title: "Our Work", desc: "Completed and in-progress projects shown on About." },
-  { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts." },
+  { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts.", href: "/admin/blog" },
   { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form and service pages.", href: "/admin/inquiries" },
   { icon: Calculator, title: "Calculator Rates", desc: "Update ₹ material rates used by the calculators." },
   { icon: Settings, title: "Site Settings", desc: "Profile, contact details and socials." },

@@ -17,7 +17,7 @@ export function BlogPostsList() {
       getImage={(p) => p.image}
       getTitle={(p) => p.title}
       renderSubtitle={(p) => (p.published ? "Published" : "Draft")}
-      extraAction={() => ({ href: "/admin/blog-categories", label: "Categories →" })}
+      headerLink={{ href: "/admin/blog-categories", label: "Manage categories" }}
     />
   );
 }
