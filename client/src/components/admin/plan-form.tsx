@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { AlertCircle } from "lucide-react";
 import { TextField, TextAreaField, NumberField, SelectField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
-import { BackLink } from "@/components/admin/back-link";
+import { AdminFormShell } from "@/components/admin/admin-form-shell";
 import { createPlan, updatePlan, type PlanRecord } from "@/lib/admin-api";
 
 const facingOptions = ["North", "South", "East", "West", "North-East", "North-West", "South-East", "South-West"].map(
@@ -72,49 +70,33 @@ export function PlanForm({ existing }: { existing?: PlanRecord }) {
   };
 
   return (
-    <div>
-      <BackLink href="/admin/plans" label="Ready-made Plans" />
-      <h1 className="display mt-4 text-3xl">{editing ? "Edit plan" : "New plan"}</h1>
+    <AdminFormShell
+      backHref="/admin/plans"
+      backLabel="Ready-made Plans"
+      heading={editing ? "Edit plan" : "New plan"}
+      onSubmit={onSubmit}
+      error={error}
+      saving={saving}
+      submitLabel={saving ? "Saving…" : editing ? "Save changes" : "Create plan"}
+      cancelHref="/admin/plans"
+    >
+      <TextField label="Title" value={title} onChange={setTitle} placeholder="e.g. Modern 3 BHK Villa" required />
+      <TextField label="Configuration" value={config} onChange={setConfig} placeholder="e.g. 3 BHK · G+1" required />
 
-      <form onSubmit={onSubmit} className="mt-8 grid max-w-2xl gap-6">
-        <TextField label="Title" value={title} onChange={setTitle} placeholder="e.g. Modern 3 BHK Villa" required />
-        <TextField label="Configuration" value={config} onChange={setConfig} placeholder="e.g. 3 BHK · G+1" required />
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <NumberField label="Area" suffix="sqft" value={area} onChange={setArea} step={50} required />
+        <NumberField label="Beds" value={beds} onChange={setBeds} required />
+        <NumberField label="Baths" value={baths} onChange={setBaths} required />
+        <NumberField label="Floors" value={floors} onChange={setFloors} min={1} required />
+      </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <NumberField label="Area" suffix="sqft" value={area} onChange={setArea} step={50} required />
-          <NumberField label="Beds" value={beds} onChange={setBeds} required />
-          <NumberField label="Baths" value={baths} onChange={setBaths} required />
-          <NumberField label="Floors" value={floors} onChange={setFloors} min={1} required />
-        </div>
+      <div className="grid grid-cols-2 gap-4">
+        <SelectField label="Facing" value={facing} onChange={setFacing} options={facingOptions} required />
+        <TextField label="Tag" value={tag} onChange={setTag} placeholder="e.g. Popular, New (optional)" />
+      </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <SelectField label="Facing" value={facing} onChange={setFacing} options={facingOptions} required />
-          <TextField label="Tag" value={tag} onChange={setTag} placeholder="e.g. Popular, New (optional)" />
-        </div>
-
-        <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
-        <ImageUploader label="Image" value={image} folder="plans" onChange={setImage} required />
-
-        {error && (
-          <div className="flex items-start gap-2 border border-accent/30 bg-accent-soft px-3.5 py-2.5 text-sm text-accent-strong">
-            <AlertCircle size={16} className="mt-0.5 shrink-0" />
-            {error}
-          </div>
-        )}
-
-        <div className="flex items-center gap-3">
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded-sm bg-ink px-6 py-3 text-sm font-medium text-paper transition-opacity disabled:opacity-50"
-          >
-            {saving ? "Saving…" : editing ? "Save changes" : "Create plan"}
-          </button>
-          <Link href="/admin/plans" className="text-sm font-medium text-graphite hover:text-ink">
-            Cancel
-          </Link>
-        </div>
-      </form>
-    </div>
+      <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
+      <ImageUploader label="Image" value={image} folder="plans" onChange={setImage} required />
+    </AdminFormShell>
   );
 }

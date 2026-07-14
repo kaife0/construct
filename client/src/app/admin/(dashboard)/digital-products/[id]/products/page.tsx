@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: "Products" };
 export default async function DigitalProductItemsPage({
   params,
 }: {
-  params: Promise<{ categoryId: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const { categoryId } = await params;
-  return <DigitalProductItemsList categoryId={categoryId} />;
+  const { id } = await params;
+  return <DigitalProductItemsList categoryId={id} />;
 }

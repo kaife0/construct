@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: "Edit Product" };
 export default async function EditDigitalProductItemPage({
   params,
 }: {
-  params: Promise<{ categoryId: string; id: string }>;
+  params: Promise<{ id: string; productId: string }>;
 }) {
-  const { categoryId, id } = await params;
-  return <EditDigitalProductItem categoryId={categoryId} id={id} />;
+  const { id, productId } = await params;
+  return <EditDigitalProductItem categoryId={id} id={productId} />;
 }
