@@ -67,12 +67,12 @@ export function ServiceForm({ existing }: { existing?: ServiceRecord }) {
         <TextField label="Summary" value={summary} onChange={setSummary} placeholder="One-line summary shown on cards" required />
         <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
         <TextAreaField
-          label="Deliverables"
+          label="What's included"
           value={deliverables}
           onChange={setDeliverables}
-          rows={5}
-          hint="One per line."
-          placeholder={"Site & plot analysis\nZoning & floor layouts"}
+          rows={10}
+          hint="One per line. Shown as a checklist on the service's detail page."
+          placeholder={"Residential planning\nCommercial planning\nVastu-based planning\nCorner-plot planning"}
         />
         <ImageUploader label="Image" value={image} folder="services" onChange={setImage} required />
 

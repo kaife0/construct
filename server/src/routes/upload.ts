@@ -6,7 +6,7 @@ import { storage } from "../lib/storage/index.js";
 
 const router = Router();
 
-const ALLOWED_FOLDERS = new Set(["services", "plans", "projects", "blog", "misc"]);
+const ALLOWED_FOLDERS = new Set(["services", "plans", "projects", "blog", "digital-products", "misc"]);
 
 // Buffer the file in memory (small admin uploads), then sharp re-encodes it.
 const upload = multer({

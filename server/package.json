@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "seed:admin": "tsx src/scripts/create-admin.ts",
     "seed:services": "tsx src/scripts/seed-services.ts",
-    "seed:plans": "tsx src/scripts/seed-plans.ts"
+    "seed:plans": "tsx src/scripts/seed-plans.ts",
+    "seed:digital-products": "tsx src/scripts/seed-digital-products.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

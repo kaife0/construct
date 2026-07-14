@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { ServiceGrid } from "@/components/services/service-grid";
-import { PlansShowcaseSection } from "@/components/services/plans-showcase-section";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
 import { getServices } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "House planning, structural design, interiors, 2D/3D plans, estimation, site supervision and ready-made plans.",
+    "Floor plans, interior design, exterior elevation, 3D walkthroughs, BBS, estimation, approvals, renovation and drafting support.",
 };
 
 export default async function ServicesPage() {
@@ -19,7 +18,7 @@ export default async function ServicesPage() {
         index="01"
         label="Services"
         title="Everything from first sketch to final slab."
-        lede="Seven ways to work with us — engaged individually or end to end."
+        lede="Nine ways to work with us — engaged individually or end to end. Tap any service to see exactly what's included."
       />
 
       <section>
@@ -27,8 +26,6 @@ export default async function ServicesPage() {
           <ServiceGrid services={services} />
         </div>
       </section>
-
-      <PlansShowcaseSection />
 
       <WhatsAppCtaSection
         heading="Not sure which service you need?"

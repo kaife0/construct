@@ -1,6 +1,7 @@
 import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
 import { Reveal } from "@/components/reveal";
-import { ContactForm } from "@/components/contact-form";
+import { InquiryForm } from "@/components/inquiry-form";
+import { getServices } from "@/lib/api";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
 const channels = [
@@ -17,7 +18,9 @@ const channels = [
   { key: "email", label: "Email", value: siteConfig.contact.email, icon: Mail, href: `mailto:${siteConfig.contact.email}`, external: false },
 ];
 
-export function ContactSection() {
+export async function ContactSection() {
+  const services = await getServices();
+  const serviceOptions = services.map((s) => s.title);
   return (
     <section id="contact" className="border-t border-line scroll-mt-20">
       <div className="container-x py-16 md:py-24">
@@ -69,7 +72,7 @@ export function ContactSection() {
 
           {/* Form */}
           <div className="lg:col-span-7">
-            <ContactForm />
+            <InquiryForm serviceOptions={serviceOptions} />
           </div>
         </div>
       </div>

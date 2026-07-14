@@ -1,5 +1,6 @@
 export * from "./Service.js";
 export * from "./Plan.js";
+export * from "./DigitalProductCategory.js";
 export * from "./Project.js";
 export * from "./BlogPost.js";
 export * from "./Inquiry.js";

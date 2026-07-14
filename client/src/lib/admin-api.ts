@@ -121,3 +121,25 @@ export async function deletePlan(id: string): Promise<{ ok: true }> {
   await revalidate(["plans"]);
   return result;
 }
+
+// ---- Inquiries ---------------------------------------------------------
+
+export type InquiryStatus = "new" | "contacted" | "closed";
+
+export type InquiryRecord = {
+  _id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  service?: string;
+  message: string;
+  status: InquiryStatus;
+  createdAt: string;
+};
+
+export const listInquiries = () => jsonRequest<InquiryRecord[]>("/api/inquiries", "GET");
+
+export const setInquiryStatus = (id: string, status: InquiryStatus) =>
+  jsonRequest<InquiryRecord>(`/api/inquiries/${id}`, "PATCH", { status });
+
+export const deleteInquiry = (id: string) => jsonRequest<{ ok: true }>(`/api/inquiries/${id}`, "DELETE");
