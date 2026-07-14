@@ -157,6 +157,38 @@ export const createDigitalProduct = digitalProducts.create;
 export const updateDigitalProduct = digitalProducts.update;
 export const deleteDigitalProduct = digitalProducts.remove;
 
+// ---- Blog Categories ---------------------------------------------------
+
+export type BlogCategoryInput = { title: string };
+export type BlogCategoryRecord = BlogCategoryInput & { _id: string; slug: string; order: number };
+
+const blogCategories = crudClient<BlogCategoryInput, BlogCategoryRecord>("blog-categories", "blog-categories");
+export const listBlogCategories = blogCategories.list;
+export const getBlogCategory = blogCategories.get;
+export const createBlogCategory = blogCategories.create;
+export const updateBlogCategory = blogCategories.update;
+export const deleteBlogCategory = blogCategories.remove;
+
+// ---- Blog Posts ---------------------------------------------------------
+
+export type BlogPostInput = {
+  categoryId: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  readMins?: number;
+  published: boolean;
+};
+export type BlogPostRecord = BlogPostInput & { _id: string; slug: string; order: number };
+
+const blogPosts = crudClient<BlogPostInput, BlogPostRecord>("blog-posts", "posts");
+export const listBlogPosts = () => jsonRequest<BlogPostRecord[]>("/api/blog-posts/admin", "GET");
+export const getBlogPost = blogPosts.get;
+export const createBlogPost = blogPosts.create;
+export const updateBlogPost = blogPosts.update;
+export const deleteBlogPost = blogPosts.remove;
+
 // ---- Inquiries ---------------------------------------------------------
 
 export type InquiryStatus = "new" | "contacted" | "closed";

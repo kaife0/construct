@@ -12,7 +12,8 @@
     "seed:admin": "tsx src/scripts/create-admin.ts",
     "seed:services": "tsx src/scripts/seed-services.ts",
     "seed:plans": "tsx src/scripts/seed-plans.ts",
-    "seed:digital-products": "tsx src/scripts/seed-digital-products.ts"
+    "seed:digital-products": "tsx src/scripts/seed-digital-products.ts",
+    "seed:blog": "tsx src/scripts/seed-blog.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

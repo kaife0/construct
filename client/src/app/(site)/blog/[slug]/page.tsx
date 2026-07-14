@@ -3,13 +3,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { marked } from "marked";
 import { Reveal } from "@/components/reveal";
-import { posts } from "@/lib/content";
+import { getPosts, getPostBySlug } from "@/lib/api";
 
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const posts = await getPosts();
   return posts.map((p) => ({ slug: p.slug }));
 }
 
@@ -19,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   return { title: post?.title ?? "Journal", description: post?.excerpt };
 }
 
@@ -29,8 +31,12 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = await getPostBySlug(slug);
   if (!post) notFound();
+
+  // Admin-authored Markdown only (no public submission path), so rendering
+  // straight to HTML here is safe — nothing an untrusted visitor can inject.
+  const html = marked.parse(post.content || post.excerpt, { async: false }) as string;
 
   return (
     <article>
@@ -63,18 +69,7 @@ export default async function BlogPostPage({
 
       <div className="container-x py-10 md:py-14">
         <Reveal>
-          <div className="max-w-2xl space-y-5 text-base leading-relaxed text-graphite">
-            <p className="text-lg text-ink">{post.excerpt}</p>
-            <p>
-              This is placeholder article content. In the blog phase, full posts will be
-              authored from the admin panel and stored in the database, with rich text,
-              images and diagrams.
-            </p>
-            <p>
-              Each article will walk through a practical topic step by step — with the kind
-              of field-tested detail a homeowner or builder can actually act on.
-            </p>
-          </div>
+          <div className="prose-content" dangerouslySetInnerHTML={{ __html: html }} />
         </Reveal>
       </div>
     </article>

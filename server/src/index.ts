@@ -10,6 +10,8 @@ import servicesRouter from "./routes/services.js";
 import plansRouter from "./routes/plans.js";
 import digitalProductCategoriesRouter from "./routes/digital-product-categories.js";
 import digitalProductsRouter from "./routes/digital-products.js";
+import blogCategoriesRouter from "./routes/blog-categories.js";
+import blogPostsRouter from "./routes/blog-posts.js";
 import inquiriesRouter from "./routes/inquiries.js";
 import authRouter from "./routes/auth.js";
 import uploadRouter from "./routes/upload.js";
@@ -44,11 +46,13 @@ app.use("/api/services", servicesRouter);
 app.use("/api/plans", plansRouter);
 app.use("/api/digital-product-categories", digitalProductCategoriesRouter);
 app.use("/api/digital-products", digitalProductsRouter);
+app.use("/api/blog-categories", blogCategoriesRouter);
+app.use("/api/blog-posts", blogPostsRouter);
 app.use("/api/inquiries", inquiriesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/upload", uploadRouter);
-// Further resources (projects, blog, blog-categories, calculator-rates,
-// site-settings) are added as the admin panel's CRUD screens are built.
+// Further resources (projects, calculator-rates, site-settings) are added as
+// the admin panel's remaining CRUD screens are built.
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 

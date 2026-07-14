@@ -3,6 +3,7 @@ export * from "./Plan.js";
 export * from "./DigitalProductCategory.js";
 export * from "./DigitalProduct.js";
 export * from "./Project.js";
+export * from "./BlogCategory.js";
 export * from "./BlogPost.js";
 export * from "./Inquiry.js";
 export * from "./AdminUser.js";

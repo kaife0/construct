@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { BlogGrid } from "@/components/blog/blog-grid";
-import { posts } from "@/lib/content";
+import { getPosts } from "@/lib/api";
 
-export function JournalSection() {
+export async function JournalSection() {
+  const posts = await getPosts();
   return (
     <section className="border-t border-line">
       <div className="container-x py-16 md:py-24">
@@ -19,7 +20,7 @@ export function JournalSection() {
         </div>
 
         <div className="mt-10">
-          <BlogGrid posts={posts} lgCols={3} />
+          {posts.length > 0 && <BlogGrid posts={posts.slice(0, 3)} lgCols={3} />}
         </div>
       </div>
     </section>

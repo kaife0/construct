@@ -24,6 +24,7 @@ export function AdminResourceList<T>({
   getTitle,
   renderSubtitle,
   extraAction,
+  headerLink,
   backHref = "/admin",
   backLabel = "Dashboard",
 }: {
@@ -40,6 +41,8 @@ export function AdminResourceList<T>({
   renderSubtitle: (item: T) => ReactNode;
   /** Optional secondary link per row, e.g. "Products →" for a category row. */
   extraAction?: (item: T) => { href: string; label: string };
+  /** Optional link shown once, next to the "New X" button — e.g. "Manage categories". */
+  headerLink?: { href: string; label: string };
   backHref?: string;
   backLabel?: string;
 }) {
@@ -76,9 +79,16 @@ export function AdminResourceList<T>({
           <p className="label">Content</p>
           <h1 className="display mt-3 text-3xl">{title}</h1>
         </div>
-        <Link href={newHref} className="inline-flex items-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-sm font-medium text-paper">
-          <Plus size={16} /> {newLabel}
-        </Link>
+        <div className="flex items-center gap-4">
+          {headerLink && (
+            <Link href={headerLink.href} className="text-sm font-medium text-graphite hover:text-ink">
+              {headerLink.label}
+            </Link>
+          )}
+          <Link href={newHref} className="inline-flex items-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-sm font-medium text-paper">
+            <Plus size={16} /> {newLabel}
+          </Link>
+        </div>
       </div>
 
       {error && <p className="mt-6 text-sm text-accent-strong">{error}</p>}

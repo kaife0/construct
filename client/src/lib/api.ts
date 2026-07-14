@@ -8,7 +8,7 @@
  * On failure it returns an empty list rather than throwing, so a transient
  * backend hiccup degrades gracefully instead of crashing the page.
  */
-import type { Service, Plan, DigitalProductCategory, DigitalProduct } from "@/lib/content";
+import type { Service, Plan, DigitalProductCategory, DigitalProduct, Post, BlogCategory } from "@/lib/content";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:4000";
 const REVALIDATE_SECONDS = 30;
@@ -72,4 +72,42 @@ export async function getDigitalProducts(categorySlug: string): Promise<DigitalP
 
 export async function getDigitalProductBySlug(categorySlug: string, productSlug: string): Promise<DigitalProduct | null> {
   return findBySlug(await getDigitalProducts(categorySlug), productSlug);
+}
+
+type BlogCategoryDoc = { slug: string; title: string; order: number };
+
+export async function getBlogCategories(): Promise<BlogCategory[]> {
+  const docs = await fetchList<BlogCategoryDoc>("blog-categories", "blog-categories");
+  return docs.map(({ slug, title }) => ({ slug, title }));
+}
+
+type PostDoc = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  readMins: number;
+  createdAt: string;
+  categoryId: { title: string; slug: string } | null;
+};
+
+/** Published posts only. Pass a category slug to filter, e.g. from /blog/category/[slug]. */
+export async function getPosts(categorySlug?: string): Promise<Post[]> {
+  const endpoint = categorySlug ? `blog-posts?category=${encodeURIComponent(categorySlug)}` : "blog-posts";
+  const docs = await fetchList<PostDoc>(endpoint, "posts");
+  return docs.map((d) => ({
+    slug: d.slug,
+    title: d.title,
+    excerpt: d.excerpt,
+    content: d.content,
+    category: d.categoryId?.title ?? "General",
+    date: d.createdAt,
+    readMins: d.readMins,
+    image: d.image,
+  }));
+}
+
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  return findBySlug(await getPosts(), slug);
 }

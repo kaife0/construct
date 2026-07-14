@@ -89,3 +89,62 @@ body {
   background: var(--ink);
   color: var(--paper);
 }
+
+/* Rendered Markdown (blog post content) — admin-authored, trusted content only. */
+.prose-content {
+  max-width: 42rem;
+  color: var(--graphite);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.prose-content > * + * {
+  margin-top: 1.25em;
+}
+.prose-content h1,
+.prose-content h2,
+.prose-content h3 {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+.prose-content h2 {
+  font-size: 1.4em;
+  margin-top: 1.75em;
+}
+.prose-content h3 {
+  font-size: 1.15em;
+  margin-top: 1.5em;
+}
+.prose-content strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.prose-content a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-content ul,
+.prose-content ol {
+  padding-left: 1.25em;
+}
+.prose-content ul {
+  list-style: disc;
+}
+.prose-content ol {
+  list-style: decimal;
+}
+.prose-content blockquote {
+  border-left: 2px solid var(--line-strong);
+  padding-left: 1em;
+  color: var(--muted);
+  font-style: italic;
+}
+.prose-content code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
