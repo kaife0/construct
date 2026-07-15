@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, BedDouble, Bath, Layers, Ruler, Compass } from "lucide-react";
-import { getPlans, getPlanBySlug } from "@/lib/api";
+import { getPlans, getPlanBySlug, getSiteSettings } from "@/lib/api";
 import { ImageGallery } from "@/components/image-gallery";
 import type { Plan } from "@/lib/content";
 import { siteConfig, whatsappUrl } from "@/lib/site";
@@ -36,7 +36,7 @@ export default async function PlanDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const plan = await getPlanBySlug(slug);
+  const [plan, { contact }] = await Promise.all([getPlanBySlug(slug), getSiteSettings()]);
   if (!plan) notFound();
 
   return (
@@ -76,7 +76,7 @@ export default async function PlanDetailPage({
             </ul>
 
             <a
-              href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in the "${plan.title}" plan.`)}
+              href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in the "${plan.title}" plan.`, contact.whatsappNumber)}
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"

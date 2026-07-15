@@ -8,7 +8,7 @@ import { Menu, X, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navLinks, siteConfig, whatsappUrl } from "@/lib/site";
 
-export function Navbar() {
+export function Navbar({ whatsappNumber }: { whatsappNumber: string }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -77,7 +77,7 @@ export function Navbar() {
 
         <div className="hidden lg:block">
           <a
-            href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`)}
+            href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, whatsappNumber)}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-1.5 rounded-sm bg-ink px-4 py-2.5 text-[13px] font-medium text-paper"
@@ -126,7 +126,7 @@ export function Navbar() {
               ))}
               <li className="py-4">
                 <a
-                  href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`)}
+                  href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, whatsappNumber)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-1.5 rounded-sm bg-ink px-4 py-3.5 text-base font-medium text-paper"

@@ -5,8 +5,7 @@ import { ProcessSection } from "@/components/about/process-section";
 import { WorkShowcaseSection } from "@/components/about/work-showcase-section";
 import { AchievementsSection } from "@/components/about/achievements-section";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
-import { profile } from "@/lib/content";
-import { getProjects } from "@/lib/api";
+import { getProjects, getSiteSettings } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "About",
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const projects = await getProjects();
+  const [projects, { profile }] = await Promise.all([getProjects(), getSiteSettings()]);
   return (
     <>
       <PageHeader index="05" label="About" title={profile.name} lede={profile.role} />

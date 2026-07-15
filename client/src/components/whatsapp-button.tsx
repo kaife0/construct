@@ -4,10 +4,10 @@ import { motion } from "motion/react";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
 /** Floating tap-to-chat WhatsApp button, fixed bottom-right on every page. */
-export function WhatsAppButton() {
+export function WhatsAppButton({ whatsappNumber }: { whatsappNumber: string }) {
   return (
     <motion.a
-      href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`)}
+      href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, whatsappNumber)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"

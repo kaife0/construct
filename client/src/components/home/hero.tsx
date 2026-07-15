@@ -3,8 +3,10 @@ import { ArrowUpRight, ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { TechnicalDrawing } from "@/components/technical-drawing";
 import { siteConfig, whatsappUrl } from "@/lib/site";
+import { getSiteSettings } from "@/lib/api";
 
-export function Hero() {
+export async function Hero() {
+  const { contact } = await getSiteSettings();
   return (
     <section className="relative overflow-hidden">
       <div className="container-x grid items-center gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-8 lg:py-24">
@@ -34,7 +36,7 @@ export function Hero() {
           <Reveal delay={0.18}>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <a
-                href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`)}
+                href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, contact.whatsappNumber)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"

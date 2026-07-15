@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { profile } from "@/lib/content";
+import { getSiteSettings } from "@/lib/api";
 
-export function AboutTeaserSection() {
+export async function AboutTeaserSection() {
+  const { profile } = await getSiteSettings();
   return (
     <section className="border-t border-line">
       <div className="container-x grid gap-12 py-16 md:py-24 lg:grid-cols-12 lg:gap-8">

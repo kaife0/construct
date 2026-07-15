@@ -3,6 +3,7 @@
  * go through the same-origin proxy carrying the httpOnly session cookie.
  */
 import type { MaterialRates } from "@/lib/rates";
+import type { SiteSettings } from "@/lib/site";
 
 async function parseError(res: Response): Promise<string> {
   try {
@@ -244,5 +245,16 @@ export const getCalculatorRates = () => jsonRequest<CalculatorRatesRecord>("/api
 export const updateCalculatorRates = async (data: MaterialRates) => {
   const result = await jsonRequest<CalculatorRatesRecord>("/api/calculator-rates", "PUT", data);
   await revalidate(["calculator-rates"]);
+  return result;
+};
+
+// ---- Site Settings (singleton) ---------------------------------------------
+
+export type SiteSettingsRecord = SiteSettings & { _id: string };
+
+export const getSiteSettings = () => jsonRequest<SiteSettingsRecord>("/api/site-settings", "GET");
+export const updateSiteSettings = async (data: SiteSettings) => {
+  const result = await jsonRequest<SiteSettingsRecord>("/api/site-settings", "PUT", data);
+  await revalidate(["site-settings"]);
   return result;
 };

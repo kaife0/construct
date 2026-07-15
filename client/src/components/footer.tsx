@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { InstagramIcon, LinkedinIcon, YoutubeIcon } from "@/components/social-icons";
-import { navLinks, siteConfig, whatsappUrl } from "@/lib/site";
+import { navLinks, siteConfig, whatsappUrl, telHref } from "@/lib/site";
+import { getSiteSettings } from "@/lib/api";
 
 const services = [
   { label: "House Planning", href: "/services" },
@@ -10,8 +11,9 @@ const services = [
   { label: "2D & 3D Plans", href: "/services" },
 ];
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear();
+  const { contact, socials } = await getSiteSettings();
 
   return (
     <footer className="bg-ink text-paper">
@@ -25,7 +27,7 @@ export function Footer() {
             </h2>
           </div>
           <a
-            href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`)}
+            href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, contact.whatsappNumber)}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex w-fit items-center gap-2 rounded-sm bg-accent px-6 py-3.5 text-sm font-medium text-white"
@@ -47,13 +49,13 @@ export function Footer() {
             {siteConfig.description}
           </p>
           <div className="mt-5 flex gap-2.5">
-            <a href={siteConfig.socials.instagram} aria-label="Instagram" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.instagram} aria-label="Instagram" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <InstagramIcon />
             </a>
-            <a href={siteConfig.socials.linkedin} aria-label="LinkedIn" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.linkedin} aria-label="LinkedIn" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <LinkedinIcon />
             </a>
-            <a href={siteConfig.socials.youtube} aria-label="YouTube" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.youtube} aria-label="YouTube" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <YoutubeIcon />
             </a>
           </div>
@@ -88,17 +90,17 @@ export function Footer() {
           <h3 className="label text-paper/40">Get in touch</h3>
           <ul className="mt-4 space-y-3">
             <li>
-              <a href={siteConfig.contact.phoneHref} className="flex items-center gap-2.5 text-sm text-paper/70 transition-colors hover:text-accent">
-                <Phone size={15} /> {siteConfig.contact.phone}
+              <a href={telHref(contact.phone)} className="flex items-center gap-2.5 text-sm text-paper/70 transition-colors hover:text-accent">
+                <Phone size={15} /> {contact.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${siteConfig.contact.email}`} className="flex items-center gap-2.5 text-sm text-paper/70 transition-colors hover:text-accent">
-                <Mail size={15} /> {siteConfig.contact.email}
+              <a href={`mailto:${contact.email}`} className="flex items-center gap-2.5 text-sm text-paper/70 transition-colors hover:text-accent">
+                <Mail size={15} /> {contact.email}
               </a>
             </li>
             <li className="flex items-center gap-2.5 text-sm text-paper/70">
-              <MapPin size={15} /> {siteConfig.contact.location}
+              <MapPin size={15} /> {contact.location}
             </li>
           </ul>
         </div>

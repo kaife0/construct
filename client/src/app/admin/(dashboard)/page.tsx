@@ -12,7 +12,7 @@ const sections = [
   { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts.", href: "/admin/blog" },
   { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form and service pages.", href: "/admin/inquiries" },
   { icon: Calculator, title: "Calculator Rates", desc: "Update ₹ material rates used by the calculators.", href: "/admin/calculator-rates" },
-  { icon: Settings, title: "Site Settings", desc: "Profile, contact details and socials." },
+  { icon: Settings, title: "Site Settings", desc: "Profile, contact details and socials.", href: "/admin/site-settings" },
 ];
 
 export default function AdminDashboardPage() {
@@ -20,9 +20,7 @@ export default function AdminDashboardPage() {
     <div>
       <p className="label">Dashboard</p>
       <h1 className="display mt-3 text-3xl">Manage CasaStruct.</h1>
-      <p className="mt-2 text-sm text-graphite">
-        You&apos;re signed in. Content sections are being wired up one by one.
-      </p>
+      <p className="mt-2 text-sm text-graphite">You&apos;re signed in.</p>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((s) =>

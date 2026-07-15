@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
-import { getServices, getServiceBySlug } from "@/lib/api";
+import { getServices, getServiceBySlug, getSiteSettings } from "@/lib/api";
 import { InquiryForm } from "@/components/inquiry-form";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
@@ -28,7 +28,7 @@ export default async function ServiceDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = await getServiceBySlug(slug);
+  const [service, { contact }] = await Promise.all([getServiceBySlug(slug), getSiteSettings()]);
   if (!service) notFound();
 
   return (
@@ -77,7 +77,7 @@ export default async function ServiceDetailPage({
           )}
 
           <a
-            href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in "${service.title}".`)}
+            href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in "${service.title}".`, contact.whatsappNumber)}
             target="_blank"
             rel="noopener noreferrer"
             className="group mt-10 inline-flex items-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"
@@ -88,7 +88,7 @@ export default async function ServiceDetailPage({
         </div>
 
         <div className="lg:col-span-5">
-          <InquiryForm fixedService={service.title} />
+          <InquiryForm fixedService={service.title} whatsappNumber={contact.whatsappNumber} />
         </div>
       </div>
     </article>

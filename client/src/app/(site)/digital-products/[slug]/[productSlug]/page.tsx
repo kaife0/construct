@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getDigitalProducts, getDigitalProductBySlug } from "@/lib/api";
+import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getDigitalProducts, getDigitalProductBySlug, getSiteSettings } from "@/lib/api";
 import { ImageGallery } from "@/components/image-gallery";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
@@ -36,7 +36,7 @@ export default async function DigitalProductItemPage({
   const category = await getDigitalProductCategoryBySlug(slug);
   if (!category) notFound();
 
-  const product = await getDigitalProductBySlug(slug, productSlug);
+  const [product, { contact }] = await Promise.all([getDigitalProductBySlug(slug, productSlug), getSiteSettings()]);
   if (!product) notFound();
 
   return (
@@ -82,7 +82,7 @@ export default async function DigitalProductItemPage({
               </div>
             )}
             <a
-              href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in "${product.title}".`)}
+              href={whatsappUrl(`Hi ${siteConfig.name}, I'm interested in "${product.title}".`, contact.whatsappNumber)}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex w-full items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"

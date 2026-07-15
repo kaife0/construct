@@ -10,6 +10,7 @@
  */
 import type { Service, Plan, DigitalProductCategory, DigitalProduct, Post, BlogCategory, Project } from "@/lib/content";
 import { materialRates, type MaterialRates } from "@/lib/rates";
+import { defaultSiteSettings, type SiteSettings } from "@/lib/site";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:4000";
 const REVALIDATE_SECONDS = 30;
@@ -122,6 +123,19 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return findBySlug(await getProjects(), slug);
+}
+
+/** Falls back to the hardcoded defaults on failure so the site never breaks. */
+export async function getSiteSettings(): Promise<SiteSettings> {
+  try {
+    const res = await fetch(`${API_BASE}/api/site-settings`, {
+      next: { revalidate: REVALIDATE_SECONDS, tags: ["site-settings"] },
+    });
+    if (!res.ok) return defaultSiteSettings;
+    return await res.json();
+  } catch {
+    return defaultSiteSettings;
+  }
 }
 
 /** Falls back to the hardcoded defaults on failure so the calculators never break. */

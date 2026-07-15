@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, MapPin, CalendarDays, Ruler, Layers } from "lucide-react";
-import { getProjects, getProjectBySlug } from "@/lib/api";
+import { getProjects, getProjectBySlug, getSiteSettings } from "@/lib/api";
 import type { Project } from "@/lib/content";
 import { ImageGallery } from "@/components/image-gallery";
 import { siteConfig, whatsappUrl } from "@/lib/site";
@@ -36,7 +36,7 @@ export default async function ProjectDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const [project, { contact }] = await Promise.all([getProjectBySlug(slug), getSiteSettings()]);
   if (!project) notFound();
 
   const isCompleted = project.status === "completed";
@@ -77,7 +77,7 @@ export default async function ProjectDetailPage({
             </ul>
 
             <a
-              href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to know more about the "${project.title}" project.`)}
+              href={whatsappUrl(`Hi ${siteConfig.name}, I'd like to know more about the "${project.title}" project.`, contact.whatsappNumber)}
               target="_blank"
               rel="noopener noreferrer"
               className="group mt-6 inline-flex w-full items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3.5 text-sm font-medium text-paper"

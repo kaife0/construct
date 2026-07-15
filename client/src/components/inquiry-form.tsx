@@ -21,9 +21,11 @@ const EMPTY_FORM = { name: "", phone: "", email: "", service: "", message: "" };
 export function InquiryForm({
   fixedService,
   serviceOptions,
+  whatsappNumber,
 }: {
   fixedService?: string;
   serviceOptions?: string[];
+  whatsappNumber?: string;
 }) {
   const [form, setForm] = useState({ ...EMPTY_FORM, service: fixedService ?? serviceOptions?.[0] ?? "" });
   const [sent, setSent] = useState(false);
@@ -43,7 +45,7 @@ export function InquiryForm({
       `\nName: ${form.name}` +
       `\nMessage: ${form.message}`;
 
-    window.open(whatsappUrl(text), "_blank", "noopener,noreferrer");
+    window.open(whatsappUrl(text, whatsappNumber), "_blank", "noopener,noreferrer");
     setSent(true);
 
     submitInquiry({ ...form, email: form.email || undefined, service }).catch(() => {

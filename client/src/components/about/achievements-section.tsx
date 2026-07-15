@@ -1,7 +1,8 @@
 import { Reveal } from "@/components/reveal";
-import { achievements } from "@/lib/content";
+import { getSiteSettings } from "@/lib/api";
 
-export function AchievementsSection() {
+export async function AchievementsSection() {
+  const { achievements } = await getSiteSettings();
   return (
     <section className="border-t border-line">
       <div className="container-x py-16 md:py-20">

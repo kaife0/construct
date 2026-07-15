@@ -1,26 +1,27 @@
 import { Phone, Mail, MessageCircle, MapPin } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { InquiryForm } from "@/components/inquiry-form";
-import { getServices } from "@/lib/api";
-import { siteConfig, whatsappUrl } from "@/lib/site";
-
-const channels = [
-  {
-    key: "whatsapp",
-    label: "WhatsApp",
-    value: "Tap to chat",
-    icon: MessageCircle,
-    href: whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`),
-    external: true,
-    accent: true,
-  },
-  { key: "phone", label: "Phone", value: siteConfig.contact.phone, icon: Phone, href: siteConfig.contact.phoneHref, external: false },
-  { key: "email", label: "Email", value: siteConfig.contact.email, icon: Mail, href: `mailto:${siteConfig.contact.email}`, external: false },
-];
+import { getServices, getSiteSettings } from "@/lib/api";
+import { siteConfig, whatsappUrl, telHref } from "@/lib/site";
 
 export async function ContactSection() {
-  const services = await getServices();
+  const [services, { contact }] = await Promise.all([getServices(), getSiteSettings()]);
   const serviceOptions = services.map((s) => s.title);
+
+  const channels = [
+    {
+      key: "whatsapp",
+      label: "WhatsApp",
+      value: "Tap to chat",
+      icon: MessageCircle,
+      href: whatsappUrl(`Hi ${siteConfig.name}, I'd like to discuss a project.`, contact.whatsappNumber),
+      external: true,
+      accent: true,
+    },
+    { key: "phone", label: "Phone", value: contact.phone, icon: Phone, href: telHref(contact.phone), external: false },
+    { key: "email", label: "Email", value: contact.email, icon: Mail, href: `mailto:${contact.email}`, external: false },
+  ];
+
   return (
     <section id="contact" className="border-t border-line scroll-mt-20">
       <div className="container-x py-16 md:py-24">
@@ -60,7 +61,7 @@ export async function ContactSection() {
                 </span>
                 <div>
                   <p className="label text-[10px]">Based in</p>
-                  <p className="text-base font-medium text-ink">{siteConfig.contact.location}</p>
+                  <p className="text-base font-medium text-ink">{contact.location}</p>
                 </div>
               </div>
             </div>
@@ -72,7 +73,7 @@ export async function ContactSection() {
 
           {/* Form */}
           <div className="lg:col-span-7">
-            <InquiryForm serviceOptions={serviceOptions} />
+            <InquiryForm serviceOptions={serviceOptions} whatsappNumber={contact.whatsappNumber} />
           </div>
         </div>
       </div>

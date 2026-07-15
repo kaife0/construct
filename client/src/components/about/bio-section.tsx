@@ -1,14 +1,15 @@
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
-import { profile } from "@/lib/content";
+import { getSiteSettings } from "@/lib/api";
 
-const stats = [
-  { to: 500, suffix: "+", label: "Projects" },
-  { to: 14, suffix: "yrs", label: "Experience" },
-  { to: 60, suffix: "+", label: "Cities" },
-];
+export async function BioSection() {
+  const { profile } = await getSiteSettings();
+  const stats = [
+    { to: profile.stats.projects, suffix: "+", label: "Projects" },
+    { to: profile.stats.experienceYears, suffix: "yrs", label: "Experience" },
+    { to: profile.stats.cities, suffix: "+", label: "Cities" },
+  ];
 
-export function BioSection() {
   return (
     <section>
       <div className="container-x grid gap-12 py-14 md:py-20 lg:grid-cols-12 lg:gap-8">

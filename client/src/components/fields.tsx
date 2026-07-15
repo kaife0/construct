@@ -10,12 +10,14 @@ export function TextField({
   value,
   onChange,
   placeholder,
+  hint,
   required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  hint?: string;
   required?: boolean;
 }) {
   return (
@@ -27,6 +29,7 @@ export function TextField({
         placeholder={placeholder}
         className={inputCls}
       />
+      {hint && <p className="mt-1.5 text-xs text-muted">{hint}</p>}
     </div>
   );
 }
