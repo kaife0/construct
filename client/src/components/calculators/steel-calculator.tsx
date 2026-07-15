@@ -4,15 +4,15 @@ import { useState, useMemo } from "react";
 import { NumberField, SelectField } from "@/components/fields";
 import { ResultCard } from "@/components/calculators/result-card";
 import { calculateSteel, STRUCTURE_TYPE_OPTIONS, type StructureType } from "@/lib/calculators";
-import { materialRates } from "@/lib/rates";
+import type { MaterialRates } from "@/lib/rates";
 import { formatNumber, formatRupees } from "@/lib/format";
 
-export function SteelCalculator() {
+export function SteelCalculator({ rates }: { rates: MaterialRates }) {
   const [area, setArea] = useState(1200);
   const [type, setType] = useState<StructureType>("framed-lowrise");
 
   const result = useMemo(() => calculateSteel(area, type), [area, type]);
-  const cost = result.kg * materialRates.steelPerKg;
+  const cost = result.kg * rates.steelPerKg;
 
   return (
     <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
@@ -26,7 +26,7 @@ export function SteelCalculator() {
         headlineValue={`${formatNumber(result.kg)} kg`}
         stats={[
           { label: "In tonnes", value: `${formatNumber(result.tonnes, 2)} t` },
-          { label: "Rate used", value: `₹${materialRates.steelPerKg}/kg` },
+          { label: "Rate used", value: `₹${rates.steelPerKg}/kg` },
         ]}
         costValue={formatRupees(cost)}
         note="Thumb-rule kg per sq.ft of built-up area by structure type — a detailed BBS will vary by design."

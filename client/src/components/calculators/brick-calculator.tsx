@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { NumberField, SelectField } from "@/components/fields";
 import { ResultCard } from "@/components/calculators/result-card";
 import { calculateBricks, WALL_THICKNESS_OPTIONS } from "@/lib/calculators";
-import { materialRates } from "@/lib/rates";
+import type { MaterialRates } from "@/lib/rates";
 import { formatNumber, formatRupees } from "@/lib/format";
 
-export function BrickCalculator() {
+export function BrickCalculator({ rates }: { rates: MaterialRates }) {
   const [length, setLength] = useState(30);
   const [height, setHeight] = useState(10);
   const [thickness, setThickness] = useState<number>(WALL_THICKNESS_OPTIONS[1].mm);
@@ -19,7 +19,7 @@ export function BrickCalculator() {
     [length, height, thickness, openings, wastage]
   );
 
-  const cost = result.bricks * materialRates.brickPerUnit;
+  const cost = result.bricks * rates.brickPerUnit;
 
   return (
     <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
@@ -41,7 +41,7 @@ export function BrickCalculator() {
         headlineValue={`${formatNumber(result.bricks)} bricks`}
         stats={[
           { label: "Net wall volume", value: `${formatNumber(result.netVolumeM3, 2)} m³` },
-          { label: "Rate used", value: `₹${materialRates.brickPerUnit}/brick` },
+          { label: "Rate used", value: `₹${rates.brickPerUnit}/brick` },
         ]}
         costValue={formatRupees(cost)}
         note="Based on standard modular brick (190×90×90mm) with a 10mm mortar joint. Adjust wastage for cut bricks and breakage."

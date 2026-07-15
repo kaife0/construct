@@ -15,6 +15,7 @@ import blogPostsRouter from "./routes/blog-posts.js";
 import inquiriesRouter from "./routes/inquiries.js";
 import authRouter from "./routes/auth.js";
 import uploadRouter from "./routes/upload.js";
+import calculatorRatesRouter from "./routes/calculator-rates.js";
 
 const app = express();
 
@@ -51,7 +52,8 @@ app.use("/api/blog-posts", blogPostsRouter);
 app.use("/api/inquiries", inquiriesRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/upload", uploadRouter);
-// Further resources (projects, calculator-rates, site-settings) are added as
+app.use("/api/calculator-rates", calculatorRatesRouter);
+// Further resources (projects, site-settings) are added as
 // the admin panel's remaining CRUD screens are built.
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;

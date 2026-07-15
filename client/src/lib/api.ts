@@ -9,6 +9,7 @@
  * backend hiccup degrades gracefully instead of crashing the page.
  */
 import type { Service, Plan, DigitalProductCategory, DigitalProduct, Post, BlogCategory } from "@/lib/content";
+import { materialRates, type MaterialRates } from "@/lib/rates";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:4000";
 const REVALIDATE_SECONDS = 30;
@@ -110,4 +111,17 @@ export async function getPosts(categorySlug?: string): Promise<Post[]> {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return findBySlug(await getPosts(), slug);
+}
+
+/** Falls back to the hardcoded defaults on failure so the calculators never break. */
+export async function getCalculatorRates(): Promise<MaterialRates> {
+  try {
+    const res = await fetch(`${API_BASE}/api/calculator-rates`, {
+      next: { revalidate: REVALIDATE_SECONDS, tags: ["calculator-rates"] },
+    });
+    if (!res.ok) return materialRates;
+    return await res.json();
+  } catch {
+    return materialRates;
+  }
 }

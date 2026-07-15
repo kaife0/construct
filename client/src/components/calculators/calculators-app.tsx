@@ -7,6 +7,7 @@ import { CementCalculator } from "@/components/calculators/cement-calculator";
 import { SteelCalculator } from "@/components/calculators/steel-calculator";
 import { SandCalculator } from "@/components/calculators/sand-calculator";
 import { StoneCalculator } from "@/components/calculators/stone-calculator";
+import type { MaterialRates } from "@/lib/rates";
 
 const tabs = [
   { key: "bricks", label: "Bricks", Component: BrickCalculator },
@@ -16,7 +17,7 @@ const tabs = [
   { key: "stone", label: "Stone", Component: StoneCalculator },
 ] as const;
 
-export function CalculatorsApp() {
+export function CalculatorsApp({ rates }: { rates: MaterialRates }) {
   const [active, setActive] = useState<(typeof tabs)[number]["key"]>("bricks");
   const Active = tabs.find((t) => t.key === active)?.Component ?? BrickCalculator;
 
@@ -44,7 +45,7 @@ export function CalculatorsApp() {
       </div>
 
       <div className="pt-10">
-        <Active />
+        <Active rates={rates} />
       </div>
     </div>
   );

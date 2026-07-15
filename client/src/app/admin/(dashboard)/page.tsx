@@ -11,7 +11,7 @@ const sections = [
   { icon: FolderKanban, title: "Our Work", desc: "Completed and in-progress projects shown on About." },
   { icon: Newspaper, title: "Blog", desc: "Write and publish journal posts.", href: "/admin/blog" },
   { icon: Inbox, title: "Inquiries", desc: "Leads submitted through the contact form and service pages.", href: "/admin/inquiries" },
-  { icon: Calculator, title: "Calculator Rates", desc: "Update ₹ material rates used by the calculators." },
+  { icon: Calculator, title: "Calculator Rates", desc: "Update ₹ material rates used by the calculators.", href: "/admin/calculator-rates" },
   { icon: Settings, title: "Site Settings", desc: "Profile, contact details and socials." },
 ];
 

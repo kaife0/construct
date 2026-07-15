@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { CalculatorsApp } from "@/components/calculators/calculators-app";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
+import { getCalculatorRates } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Calculators",
   description: "Estimate bricks, cement, steel, sand and stone for your build — with live ₹ costing.",
 };
 
-export default function CalculatorsPage() {
+export default async function CalculatorsPage() {
+  const rates = await getCalculatorRates();
   return (
     <>
       <PageHeader
@@ -20,7 +22,7 @@ export default function CalculatorsPage() {
 
       <section>
         <div className="container-x py-10 md:py-14">
-          <CalculatorsApp />
+          <CalculatorsApp rates={rates} />
         </div>
       </section>
 

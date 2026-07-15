@@ -10,3 +10,5 @@ export const materialRates = {
   sandPerCuft: 55,
   aggregatePerCuft: 60,
 } as const;
+
+export type MaterialRates = typeof materialRates;

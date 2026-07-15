@@ -2,6 +2,7 @@
  * Client-side calls to the admin API. All paths are relative (/api/*) so they
  * go through the same-origin proxy carrying the httpOnly session cookie.
  */
+import type { MaterialRates } from "@/lib/rates";
 
 async function parseError(res: Response): Promise<string> {
   try {
@@ -208,3 +209,14 @@ export const listInquiries = () => jsonRequest<InquiryRecord[]>("/api/inquiries"
 export const setInquiryStatus = (id: string, status: InquiryStatus) =>
   jsonRequest<InquiryRecord>(`/api/inquiries/${id}`, "PATCH", { status });
 export const deleteInquiry = (id: string) => jsonRequest<{ ok: true }>(`/api/inquiries/${id}`, "DELETE");
+
+// ---- Calculator Rates (singleton) ------------------------------------------
+
+export type CalculatorRatesRecord = MaterialRates & { _id: string };
+
+export const getCalculatorRates = () => jsonRequest<CalculatorRatesRecord>("/api/calculator-rates", "GET");
+export const updateCalculatorRates = async (data: MaterialRates) => {
+  const result = await jsonRequest<CalculatorRatesRecord>("/api/calculator-rates", "PUT", data);
+  await revalidate(["calculator-rates"]);
+  return result;
+};
