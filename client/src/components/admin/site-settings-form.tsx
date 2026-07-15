@@ -22,6 +22,7 @@ function SettingsForm({ initial }: { initial: SiteSettingsRecord }) {
   const [bio, setBio] = useState(initial.profile.bio.join("\n"));
   const [credentials, setCredentials] = useState(initial.profile.credentials.join("\n"));
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const update = <K extends keyof typeof settings>(key: K, value: (typeof settings)[K]) =>
@@ -31,6 +32,7 @@ function SettingsForm({ initial }: { initial: SiteSettingsRecord }) {
     e.preventDefault();
     setSaving(true);
     setError(null);
+    setSuccess(false);
     try {
       const payload = {
         ...settings,
@@ -41,6 +43,8 @@ function SettingsForm({ initial }: { initial: SiteSettingsRecord }) {
         },
       };
       setSettings(await updateSiteSettings(payload));
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save site settings.");
     } finally {
@@ -65,6 +69,7 @@ function SettingsForm({ initial }: { initial: SiteSettingsRecord }) {
       heading="Site Settings"
       onSubmit={handleSubmit}
       error={error}
+      success={success ? "Settings saved." : null}
       saving={saving}
       submitLabel="Save settings"
       cancelHref="/admin"

@@ -1,15 +1,22 @@
 import Link from "next/link";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Check } from "lucide-react";
 import { BackLink } from "@/components/admin/back-link";
 import type { ReactNode } from "react";
 
-/** Shared chrome for every admin create/edit form — back link, heading, field slot, error box, submit/cancel. */
+/**
+ * Shared chrome for every admin create/edit form — back link, heading, field slot, error box, submit/cancel.
+ *
+ * `success` is for forms that stay on the page after saving instead of navigating away (the singleton
+ * settings forms — Calculator Rates, Site Settings). List-based forms redirect to their list on success,
+ * which is confirmation enough, so they can leave this unset.
+ */
 export function AdminFormShell({
   backHref,
   backLabel,
   heading,
   onSubmit,
   error,
+  success,
   saving,
   submitLabel,
   cancelHref,
@@ -20,6 +27,7 @@ export function AdminFormShell({
   heading: string;
   onSubmit: (e: React.FormEvent) => void;
   error: string | null;
+  success?: string | null;
   saving: boolean;
   submitLabel: string;
   cancelHref: string;
@@ -40,7 +48,7 @@ export function AdminFormShell({
           </div>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             type="submit"
             disabled={saving}
@@ -51,6 +59,11 @@ export function AdminFormShell({
           <Link href={cancelHref} className="text-sm font-medium text-graphite hover:text-ink">
             Cancel
           </Link>
+          {success && (
+            <span className="flex items-center gap-1.5 text-sm font-medium text-accent-strong">
+              <Check size={16} /> {success}
+            </span>
+          )}
         </div>
       </form>
     </div>

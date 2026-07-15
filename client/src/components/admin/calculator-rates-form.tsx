@@ -28,14 +28,18 @@ export function CalculatorRatesForm() {
 function RatesForm({ initial }: { initial: CalculatorRatesRecord }) {
   const [rates, setRates] = useState(initial);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     setError(null);
+    setSuccess(false);
     try {
       setRates(await updateCalculatorRates(rates));
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save calculator rates.");
     } finally {
@@ -50,6 +54,7 @@ function RatesForm({ initial }: { initial: CalculatorRatesRecord }) {
       heading="Calculator Rates"
       onSubmit={handleSubmit}
       error={error}
+      success={success ? "Rates saved." : null}
       saving={saving}
       submitLabel="Save rates"
       cancelHref="/admin"
