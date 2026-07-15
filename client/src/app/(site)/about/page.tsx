@@ -5,14 +5,16 @@ import { ProcessSection } from "@/components/about/process-section";
 import { WorkShowcaseSection } from "@/components/about/work-showcase-section";
 import { AchievementsSection } from "@/components/about/achievements-section";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
-import { profile, projects } from "@/lib/content";
+import { profile } from "@/lib/content";
+import { getProjects } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "About",
   description: "The engineer behind CasaStruct — experience, credentials, work and approach.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const projects = await getProjects();
   return (
     <>
       <PageHeader index="05" label="About" title={profile.name} lede={profile.role} />

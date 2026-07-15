@@ -158,6 +158,29 @@ export const createDigitalProduct = digitalProducts.create;
 export const updateDigitalProduct = digitalProducts.update;
 export const deleteDigitalProduct = digitalProducts.remove;
 
+// ---- Our Work (Projects) ----------------------------------------------
+
+export type ProjectInput = {
+  title: string;
+  location: string;
+  status: "completed" | "in-progress";
+  year: string;
+  image: string;
+  description?: string;
+  area?: number;
+  floors?: number;
+  type?: string;
+  budget?: number;
+};
+export type ProjectRecord = ProjectInput & { _id: string; slug: string; order: number };
+
+const projects = crudClient<ProjectInput, ProjectRecord>("projects", "projects");
+export const listProjects = projects.list;
+export const getProject = projects.get;
+export const createProject = projects.create;
+export const updateProject = projects.update;
+export const deleteProject = projects.remove;
+
 // ---- Blog Categories ---------------------------------------------------
 
 export type BlogCategoryInput = { title: string };

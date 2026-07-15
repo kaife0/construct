@@ -8,7 +8,7 @@
  * On failure it returns an empty list rather than throwing, so a transient
  * backend hiccup degrades gracefully instead of crashing the page.
  */
-import type { Service, Plan, DigitalProductCategory, DigitalProduct, Post, BlogCategory } from "@/lib/content";
+import type { Service, Plan, DigitalProductCategory, DigitalProduct, Post, BlogCategory, Project } from "@/lib/content";
 import { materialRates, type MaterialRates } from "@/lib/rates";
 
 const API_BASE = process.env.API_URL ?? "http://localhost:4000";
@@ -111,6 +111,13 @@ export async function getPosts(categorySlug?: string): Promise<Post[]> {
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   return findBySlug(await getPosts(), slug);
+}
+
+type ProjectDoc = Project & { order: number };
+
+/** Completed and in-progress projects shown on the About page's "Our work" section. */
+export async function getProjects(): Promise<Project[]> {
+  return fetchList<ProjectDoc>("projects", "projects");
 }
 
 /** Falls back to the hardcoded defaults on failure so the calculators never break. */

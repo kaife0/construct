@@ -8,6 +8,11 @@ const ProjectSchema = new Schema(
     status: { type: String, enum: ["completed", "in-progress"], required: true },
     year: { type: String, required: true },
     image: { type: String, required: true },
+    description: { type: String },
+    area: { type: Number }, // sq.ft built-up
+    floors: { type: Number },
+    type: { type: String }, // e.g. "Residential", "Commercial", "Renovation"
+    budget: { type: Number }, // ₹, optional — not always disclosed
     order: { type: Number, default: 0 },
   },
   { timestamps: true }

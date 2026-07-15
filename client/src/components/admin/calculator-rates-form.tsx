@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getCalculatorRates, updateCalculatorRates, type CalculatorRatesRecord } from "@/lib/admin-api";
 import { AdminFormShell } from "@/components/admin/admin-form-shell";
 import { NumberField } from "@/components/fields";
+import { useResource } from "@/components/admin/use-resource";
+import { ResourceLoader } from "@/components/admin/resource-loader";
 
 const RATE_FIELDS = [
   { key: "brickPerUnit", label: "Brick rate", suffix: "₹/brick" },
@@ -14,28 +16,26 @@ const RATE_FIELDS = [
 ] as const;
 
 export function CalculatorRatesForm() {
-  const [rates, setRates] = useState<CalculatorRatesRecord | null>(null);
+  // Singleton resource — no id to key the fetch on, so the fetcher just ignores it.
+  const { data, error } = useResource<CalculatorRatesRecord>("singleton", getCalculatorRates, "Could not load calculator rates.");
+  return (
+    <ResourceLoader data={data} error={error}>
+      {(initial) => <RatesForm initial={initial} />}
+    </ResourceLoader>
+  );
+}
+
+function RatesForm({ initial }: { initial: CalculatorRatesRecord }) {
+  const [rates, setRates] = useState(initial);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    getCalculatorRates()
-      .then(setRates)
-      .catch((e) => setError(e instanceof Error ? e.message : "Could not load calculator rates."));
-  }, []);
-
-  if (!rates) {
-    return error ? <p className="text-sm text-accent-strong">{error}</p> : <p className="text-sm text-graphite">Loading…</p>;
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!rates) return;
     setSaving(true);
     setError(null);
     try {
-      const updated = await updateCalculatorRates(rates);
-      setRates(updated);
+      setRates(await updateCalculatorRates(rates));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save calculator rates.");
     } finally {
