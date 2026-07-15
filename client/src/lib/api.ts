@@ -120,6 +120,10 @@ export async function getProjects(): Promise<Project[]> {
   return fetchList<ProjectDoc>("projects", "projects");
 }
 
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  return findBySlug(await getProjects(), slug);
+}
+
 /** Falls back to the hardcoded defaults on failure so the calculators never break. */
 export async function getCalculatorRates(): Promise<MaterialRates> {
   try {

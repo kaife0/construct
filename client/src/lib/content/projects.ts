@@ -11,6 +11,7 @@ export type Project = {
   status: "completed" | "in-progress";
   year: string;
   image: string;
+  images?: string[];
   description?: string;
   area?: number;
   floors?: number;

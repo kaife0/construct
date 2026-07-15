@@ -4,6 +4,7 @@ import { DigitalProduct, DigitalProductCategory } from "../models/index.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { uniqueSlug } from "../lib/slug.js";
 import { storage } from "../lib/storage/index.js";
+import { removeStaleImages } from "../lib/imageCleanup.js";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ const schema = z.object({
   title: z.string().trim().min(1, "Title is required."),
   description: z.string().trim().min(1, "Description is required."),
   image: z.string().trim().min(1, "Image is required."),
+  images: z.array(z.string().trim().min(1)).default([]),
   price: z.number().nonnegative().optional(),
   features: z.array(z.string().trim().min(1)).default([]),
   order: z.number().int().optional(),
@@ -89,11 +91,15 @@ router.put("/:id", requireAdmin, async (req, res) => {
     existing.slug = await uniqueSlug(DigitalProduct, data.title, existing.id);
   }
   const oldImage = existing.image;
+  const oldImages = existing.images;
   Object.assign(existing, data);
   await existing.save();
 
   if (data.image && data.image !== oldImage) {
     await storage.remove(oldImage);
+  }
+  if (data.images) {
+    await removeStaleImages(storage, oldImages, data.images);
   }
   res.json(existing);
 });
@@ -105,6 +111,7 @@ router.delete("/:id", requireAdmin, async (req, res) => {
     return;
   }
   await storage.remove(deleted.image);
+  await Promise.all((deleted.images ?? []).map((img) => storage.remove(img)));
   res.json({ ok: true });
 });
 

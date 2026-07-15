@@ -18,5 +18,6 @@ export type Plan = {
   facing: string;
   tag?: string;
   image: string;
+  images?: string[];
   description: string;
 };

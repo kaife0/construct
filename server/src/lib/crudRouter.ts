@@ -4,6 +4,7 @@ import type { ZodObject, ZodRawShape } from "zod";
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { uniqueSlug } from "./slug.js";
 import { storage } from "./storage/index.js";
+import { removeStaleImages } from "./imageCleanup.js";
 
 /**
  * Every slugged, admin-managed resource (Service, Plan, DigitalProductCategory, …)
@@ -19,8 +20,9 @@ export function createCrudRouter<T extends ZodRawShape>(options: {
   schema: ZodObject<T>;
   noun: string; // used in "<noun> not found." messages
   hasImage?: boolean; // default true — clean up the image file on replace/delete
+  hasGallery?: boolean; // default false — also clean up the `images: string[]` gallery on replace/delete
 }) {
-  const { model, schema, noun, hasImage = true } = options;
+  const { model, schema, noun, hasImage = true, hasGallery = false } = options;
   const router = Router();
   const notFound = (res: import("express").Response) => res.status(404).json({ error: `${noun} not found.` });
 
@@ -61,11 +63,15 @@ export function createCrudRouter<T extends ZodRawShape>(options: {
       existing.slug = await uniqueSlug(model, data.title as string, existing.id);
     }
     const oldImage = hasImage ? existing.image : undefined;
+    const oldImages = hasGallery ? existing.images : undefined;
     Object.assign(existing, data);
     await existing.save();
 
     if (hasImage && data.image && data.image !== oldImage) {
       await storage.remove(oldImage);
+    }
+    if (hasGallery && data.images) {
+      await removeStaleImages(storage, oldImages, data.images as string[]);
     }
     res.json(existing);
   });
@@ -74,6 +80,7 @@ export function createCrudRouter<T extends ZodRawShape>(options: {
     const deleted = await model.findByIdAndDelete(req.params.id);
     if (!deleted) return notFound(res);
     if (hasImage) await storage.remove(deleted.image);
+    if (hasGallery) await Promise.all((deleted.images ?? []).map((img: string) => storage.remove(img)));
     res.json({ ok: true });
   });
 

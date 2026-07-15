@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TextField, TextAreaField, NumberField, SelectField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { MultiImageUploader } from "@/components/admin/multi-image-uploader";
 import { AdminFormShell } from "@/components/admin/admin-form-shell";
 import { createPlan, updatePlan, type PlanRecord } from "@/lib/admin-api";
 
@@ -24,6 +25,7 @@ export function PlanForm({ existing }: { existing?: PlanRecord }) {
   const [facing, setFacing] = useState(existing?.facing ?? "East");
   const [tag, setTag] = useState(existing?.tag ?? "");
   const [image, setImage] = useState(existing?.image ?? "");
+  const [images, setImages] = useState<string[]>(existing?.images ?? []);
   const [description, setDescription] = useState(existing?.description ?? "");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -51,6 +53,7 @@ export function PlanForm({ existing }: { existing?: PlanRecord }) {
       facing: facing.trim(),
       tag: tag.trim() || undefined,
       image,
+      images,
       description: description.trim(),
     };
 
@@ -97,6 +100,7 @@ export function PlanForm({ existing }: { existing?: PlanRecord }) {
 
       <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
       <ImageUploader label="Image" value={image} folder="plans" onChange={setImage} required />
+      <MultiImageUploader value={images} folder="plans" onChange={setImages} />
     </AdminFormShell>
   );
 }

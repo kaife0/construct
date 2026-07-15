@@ -8,6 +8,7 @@ const ProjectSchema = new Schema(
     status: { type: String, enum: ["completed", "in-progress"], required: true },
     year: { type: String, required: true },
     image: { type: String, required: true },
+    images: { type: [String], default: [] },
     description: { type: String },
     area: { type: Number }, // sq.ft built-up
     floors: { type: Number },

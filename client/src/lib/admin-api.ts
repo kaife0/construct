@@ -106,6 +106,7 @@ export type PlanInput = {
   facing: string;
   tag?: string;
   image: string;
+  images?: string[];
   description: string;
 };
 export type PlanRecord = PlanInput & { _id: string; slug: string; order: number };
@@ -145,6 +146,7 @@ export type DigitalProductInput = {
   title: string;
   description: string;
   image: string;
+  images?: string[];
   price?: number;
   features: string[];
 };
@@ -166,6 +168,7 @@ export type ProjectInput = {
   status: "completed" | "in-progress";
   year: string;
   image: string;
+  images?: string[];
   description?: string;
   area?: number;
   floors?: number;

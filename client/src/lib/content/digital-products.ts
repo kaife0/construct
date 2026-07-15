@@ -30,6 +30,7 @@ export type DigitalProduct = {
   title: string;
   description: string;
   image: string;
+  images?: string[];
   price?: number;
   /** Shown as tag/capsule badges on the product's detail page. */
   features: string[];

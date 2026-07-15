@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TextField, TextAreaField, NumberField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { MultiImageUploader } from "@/components/admin/multi-image-uploader";
 import { AdminFormShell } from "@/components/admin/admin-form-shell";
 import { createDigitalProduct, updateDigitalProduct, type DigitalProductRecord } from "@/lib/admin-api";
 
@@ -21,6 +22,7 @@ export function DigitalProductItemForm({
   const [title, setTitle] = useState(existing?.title ?? "");
   const [description, setDescription] = useState(existing?.description ?? "");
   const [image, setImage] = useState(existing?.image ?? "");
+  const [images, setImages] = useState<string[]>(existing?.images ?? []);
   const [price, setPrice] = useState(existing?.price ?? 0);
   const [features, setFeatures] = useState((existing?.features ?? []).join("\n"));
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +46,7 @@ export function DigitalProductItemForm({
       title: title.trim(),
       description: description.trim(),
       image,
+      images,
       price: price > 0 ? price : undefined,
       features: features.split("\n").map((f) => f.trim()).filter(Boolean),
     };
@@ -77,6 +80,7 @@ export function DigitalProductItemForm({
       <TextField label="Title" value={title} onChange={setTitle} placeholder="e.g. Modern Kitchen CAD Block" required />
       <TextAreaField label="Description" value={description} onChange={setDescription} rows={5} required />
       <ImageUploader label="Image" value={image} folder="digital-products" onChange={setImage} required />
+      <MultiImageUploader value={images} folder="digital-products" onChange={setImages} />
       <NumberField label="Price" suffix="₹" value={price} onChange={setPrice} step={1} />
       <TextAreaField
         label="Features"

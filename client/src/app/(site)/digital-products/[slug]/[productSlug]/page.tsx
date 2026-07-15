@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getDigitalProducts, getDigitalProductBySlug } from "@/lib/api";
+import { ImageGallery } from "@/components/image-gallery";
 import { siteConfig, whatsappUrl } from "@/lib/site";
 
 export async function generateStaticParams() {
@@ -56,17 +56,7 @@ export default async function DigitalProductItemPage({
 
       <div className="container-x grid gap-10 py-10 md:py-14 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-7">
-          <div className="relative aspect-[4/3] w-full overflow-hidden border border-line">
-            <Image
-              src={product.image}
-              alt={product.title}
-              fill
-              unoptimized
-              sizes="(max-width: 1024px) 100vw, 60vw"
-              className="object-cover"
-              priority
-            />
-          </div>
+          <ImageGallery images={[product.image, ...(product.images ?? [])]} alt={product.title} />
           <p className="mt-6 max-w-xl text-base leading-relaxed text-graphite">{product.description}</p>
 
           {product.features.length > 0 && (

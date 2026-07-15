@@ -8,6 +8,7 @@ const schema = z.object({
   status: z.enum(["completed", "in-progress"]),
   year: z.string().trim().min(1, "Year is required."),
   image: z.string().trim().min(1, "Image is required."),
+  images: z.array(z.string().trim().min(1)).default([]),
   description: z.string().trim().max(2000).optional().or(z.literal("")),
   area: z.number().positive().optional(),
   floors: z.number().int().positive().optional(),
@@ -16,4 +17,4 @@ const schema = z.object({
   order: z.number().int().optional(),
 });
 
-export default createCrudRouter({ model: Project, schema, noun: "Project" });
+export default createCrudRouter({ model: Project, schema, noun: "Project", hasGallery: true });

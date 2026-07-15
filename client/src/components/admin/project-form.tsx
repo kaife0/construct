@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TextField, TextAreaField, NumberField, SelectField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { MultiImageUploader } from "@/components/admin/multi-image-uploader";
 import { AdminFormShell } from "@/components/admin/admin-form-shell";
 import { createProject, updateProject, type ProjectRecord } from "@/lib/admin-api";
 
@@ -16,6 +17,7 @@ export function ProjectForm({ existing }: { existing?: ProjectRecord }) {
   const [status, setStatus] = useState<"completed" | "in-progress">(existing?.status ?? "completed");
   const [year, setYear] = useState(existing?.year ?? "");
   const [image, setImage] = useState(existing?.image ?? "");
+  const [images, setImages] = useState<string[]>(existing?.images ?? []);
   const [description, setDescription] = useState(existing?.description ?? "");
   const [area, setArea] = useState(existing?.area ?? 0);
   const [floors, setFloors] = useState(existing?.floors ?? 0);
@@ -43,6 +45,7 @@ export function ProjectForm({ existing }: { existing?: ProjectRecord }) {
       status,
       year: year.trim(),
       image,
+      images,
       description: description.trim() || undefined,
       area: area || undefined,
       floors: floors || undefined,
@@ -103,6 +106,7 @@ export function ProjectForm({ existing }: { existing?: ProjectRecord }) {
         <NumberField label="Budget" suffix="₹" value={budget} onChange={setBudget} step={10000} />
       </div>
       <ImageUploader label="Image" value={image} folder="projects" onChange={setImage} required />
+      <MultiImageUploader value={images} folder="projects" onChange={setImages} />
     </AdminFormShell>
   );
 }

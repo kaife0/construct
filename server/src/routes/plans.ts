@@ -12,8 +12,9 @@ const schema = z.object({
   facing: z.string().trim().min(1, "Facing is required."),
   tag: z.string().trim().optional().or(z.literal("")),
   image: z.string().trim().min(1, "Image is required."),
+  images: z.array(z.string().trim().min(1)).default([]),
   description: z.string().trim().min(1, "Description is required."),
   order: z.number().int().optional(),
 });
 
-export default createCrudRouter({ model: Plan, schema, noun: "Plan" });
+export default createCrudRouter({ model: Plan, schema, noun: "Plan", hasGallery: true });

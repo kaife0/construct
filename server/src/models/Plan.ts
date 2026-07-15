@@ -12,6 +12,7 @@ const PlanSchema = new Schema(
     facing: { type: String, required: true },
     tag: { type: String },
     image: { type: String, required: true },
+    images: { type: [String], default: [] },
     description: { type: String, required: true },
     order: { type: Number, default: 0 },
   },

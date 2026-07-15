@@ -13,6 +13,7 @@ const DigitalProductSchema = new Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     image: { type: String, required: true },
+    images: { type: [String], default: [] },
     price: { type: Number },
     features: { type: [String], default: [] },
     order: { type: Number, default: 0 },
