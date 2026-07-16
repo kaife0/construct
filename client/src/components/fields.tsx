@@ -3,7 +3,7 @@
 /** Shared form input primitives — used by both the calculators and the admin panel. */
 
 const inputCls =
-  "w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink";
+  "w-full resize-y border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink";
 
 export function TextField({
   label,

@@ -50,7 +50,7 @@ export async function ContactSection() {
                     </span>
                     <div className="min-w-0">
                       <p className="label text-[10px]">{c.label}</p>
-                      <p className="truncate text-base font-medium text-ink">{c.value}</p>
+                      <p className="truncate text-base font-medium text-ink" title={c.value}>{c.value}</p>
                     </div>
                   </a>
                 </Reveal>

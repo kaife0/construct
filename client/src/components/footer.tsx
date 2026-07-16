@@ -42,13 +42,13 @@ export async function Footer() {
             {siteConfig.description}
           </p>
           <div className="mt-5 flex gap-2.5">
-            <a href={socials.instagram} aria-label="Instagram" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.instagram} aria-label="Instagram" className="grid h-10 w-10 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <InstagramIcon />
             </a>
-            <a href={socials.linkedin} aria-label="LinkedIn" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.linkedin} aria-label="LinkedIn" className="grid h-10 w-10 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <LinkedinIcon />
             </a>
-            <a href={socials.youtube} aria-label="YouTube" className="grid h-9 w-9 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
+            <a href={socials.youtube} aria-label="YouTube" className="grid h-10 w-10 place-items-center border border-paper/20 transition-colors hover:border-accent hover:text-accent">
               <YoutubeIcon />
             </a>
           </div>

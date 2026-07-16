@@ -80,7 +80,7 @@ function SettingsForm({ initial }: { initial: SiteSettingsRecord }) {
       <TextAreaField label="Intro" value={settings.profile.intro} onChange={(v) => update("profile", { ...settings.profile, intro: v })} rows={3} required />
       <TextAreaField label="Bio" value={bio} onChange={setBio} rows={6} hint="One paragraph per line." />
       <TextAreaField label="Credentials" value={credentials} onChange={setCredentials} rows={4} hint="One per line." />
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <NumberField
           label="Projects"
           value={settings.profile.stats.projects}

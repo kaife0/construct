@@ -73,8 +73,8 @@ export function ServiceForm({ existing }: { existing?: ServiceRecord }) {
         label="What's included"
         value={deliverables}
         onChange={setDeliverables}
-        rows={10}
-        hint="One per line. Shown as a checklist on the service's detail page."
+        rows={6}
+        hint="One per line. Shown as a checklist on the service's detail page. Drag the bottom-right corner to resize."
         placeholder={"Residential planning\nCommercial planning\nVastu-based planning\nCorner-plot planning"}
       />
       <ImageUploader label="Image" value={image} folder="services" onChange={setImage} required />

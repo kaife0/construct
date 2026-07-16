@@ -100,7 +100,7 @@ export function ProjectForm({ existing }: { existing?: ProjectRecord }) {
         rows={4}
         hint="Optional — a short write-up shown for the project."
       />
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <NumberField label="Area" suffix="sqft" value={area} onChange={setArea} />
         <NumberField label="Floors" value={floors} onChange={setFloors} />
         <NumberField label="Budget" suffix="₹" value={budget} onChange={setBudget} step={10000} />

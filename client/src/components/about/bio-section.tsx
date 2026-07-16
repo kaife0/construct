@@ -20,7 +20,7 @@ export async function BioSection() {
             </Reveal>
           ))}
 
-          <div className="mt-8 grid grid-cols-3 gap-6 border-t border-line pt-8">
+          <div className="mt-8 grid grid-cols-1 gap-6 border-t border-line pt-8 sm:grid-cols-3">
             {stats.map((s) => (
               <div key={s.label}>
                 <p className="display text-3xl sm:text-4xl">

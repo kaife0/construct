@@ -103,8 +103,8 @@ export function BlogPostForm({ existing }: { existing?: BlogPostRecord }) {
         label="Content"
         value={content}
         onChange={setContent}
-        rows={14}
-        hint="Markdown supported — paste your draft in. Use ## for headings, **bold**, and blank lines between paragraphs."
+        rows={8}
+        hint="Markdown supported — paste your draft in. Use ## for headings, **bold**, and blank lines between paragraphs. Drag the bottom-right corner to resize."
         placeholder="Write or paste the article here…"
       />
 
