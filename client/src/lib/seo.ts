@@ -9,6 +9,18 @@ export function absoluteUrl(path = "/"): string {
 }
 
 /**
+ * Site-wide branded social card, served by app/opengraph-image.tsx at /opengraph-image.
+ * Referenced explicitly (rather than left to Next's file-convention auto-injection) because
+ * pages that set their own `openGraph` object otherwise emit no og:image at all.
+ */
+export const defaultOgImage = {
+  url: absoluteUrl("/opengraph-image"),
+  width: 1200,
+  height: 630,
+  alt: `${siteConfig.name} — ${siteConfig.tagline}`,
+};
+
+/**
  * Keyword bank derived from India house-design / civil-engineering search demand
  * (Hindi/Hinglish "naksha" terms, plot-size + BHK long-tails, Vastu, the calculator
  * cluster, and the local Sahibganj/Jharkhand intent). Per-page metadata picks the
@@ -78,7 +90,8 @@ type BuildArgs = {
  * `metadataBase` (set in the root layout) resolves the relative `path` to absolute.
  */
 export function buildMetadata({ title, description, path, keywords, images, type = "website" }: BuildArgs): Metadata {
-  const ogImages = images?.length ? images : undefined;
+  const ogImages = images?.length ? images : [defaultOgImage];
+  const twitterImages = images?.length ? images : [defaultOgImage.url];
   return {
     ...(title ? { title } : {}),
     description,
@@ -91,12 +104,13 @@ export function buildMetadata({ title, description, path, keywords, images, type
       type,
       siteName: siteConfig.name,
       locale: "en_IN",
-      ...(ogImages ? { images: ogImages } : {}),
+      images: ogImages,
     },
     twitter: {
       card: "summary_large_image",
       ...(title ? { title } : {}),
       description,
+      images: twitterImages,
     },
   };
 }

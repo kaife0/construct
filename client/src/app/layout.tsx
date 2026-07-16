@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site";
-import { SITE_URL, allKeywords, websiteJsonLd } from "@/lib/seo";
+import { SITE_URL, allKeywords, defaultOgImage, websiteJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/json-ld";
 
 const geistSans = Geist({
@@ -42,11 +42,13 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     url: SITE_URL,
     locale: "en_IN",
+    images: [defaultOgImage],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
+    images: [defaultOgImage.url],
   },
 };
 
