@@ -4,8 +4,10 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, BedDouble, Bath, Layers, Ruler, Compass } from "lucide-react";
 import { getPlans, getPlanBySlug, getSiteSettings } from "@/lib/api";
 import { ImageGallery } from "@/components/image-gallery";
+import { JsonLd } from "@/components/json-ld";
 import type { Plan } from "@/lib/content";
 import { siteConfig, whatsappUrl } from "@/lib/site";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const plans = await getPlans();
@@ -19,7 +21,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const plan = await getPlanBySlug(slug);
-  return { title: plan?.title ?? "Plan", description: plan?.description };
+  if (!plan) return { title: "Plan" };
+  return buildMetadata({
+    title: `${plan.title} — ${plan.config} House Plan`,
+    description: plan.description,
+    path: `/plans/${slug}`,
+    images: plan.image ? [plan.image] : undefined,
+  });
 }
 
 const specs = (plan: Plan) => [
@@ -41,6 +49,13 @@ export default async function PlanDetailPage({
 
   return (
     <article>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Ready-made Plans", path: "/services#plans" },
+          { name: plan.title, path: `/plans/${slug}` },
+        ])}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href="/services#plans" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

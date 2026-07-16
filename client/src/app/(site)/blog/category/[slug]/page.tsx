@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/page-header";
 import { BlogGrid } from "@/components/blog/blog-grid";
 import { CategoryPills } from "@/components/blog/category-pills";
 import { getPosts, getBlogCategories } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const categories = await getBlogCategories();
@@ -18,7 +19,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const categories = await getBlogCategories();
   const category = categories.find((c) => c.slug === slug);
-  return { title: category ? `${category.title} — Journal` : "Journal" };
+  if (!category) return { title: "Journal" };
+  return buildMetadata({
+    title: `${category.title} — Journal`,
+    description: `${category.title} guides and articles on house planning, estimation and structural design.`,
+    path: `/blog/category/${slug}`,
+  });
 }
 
 export default async function BlogCategoryPage({

@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getDigitalProducts, getDigitalProductBySlug, getSiteSettings } from "@/lib/api";
 import { ImageGallery } from "@/components/image-gallery";
+import { JsonLd } from "@/components/json-ld";
 import { siteConfig, whatsappUrl } from "@/lib/site";
+import { buildMetadata, productJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const categories = await getDigitalProductCategories();
@@ -24,7 +26,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, productSlug } = await params;
   const product = await getDigitalProductBySlug(slug, productSlug);
-  return { title: product?.title ?? "Product", description: product?.description };
+  if (!product) return { title: "Product" };
+  return buildMetadata({
+    title: product.title,
+    description: product.description,
+    path: `/digital-products/${slug}/${productSlug}`,
+    images: product.image ? [product.image] : undefined,
+  });
 }
 
 export default async function DigitalProductItemPage({
@@ -41,6 +49,23 @@ export default async function DigitalProductItemPage({
 
   return (
     <article>
+      <JsonLd
+        data={[
+          productJsonLd({
+            name: product.title,
+            description: product.description,
+            path: `/digital-products/${slug}/${productSlug}`,
+            image: product.image,
+            price: product.price,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Digital Products", path: "/digital-products" },
+            { name: category.title, path: `/digital-products/${slug}` },
+            { name: product.title, path: `/digital-products/${slug}/${productSlug}` },
+          ]),
+        ]}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href={`/digital-products/${slug}`} className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

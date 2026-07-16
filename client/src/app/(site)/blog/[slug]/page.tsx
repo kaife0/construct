@@ -5,7 +5,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { marked } from "marked";
 import { Reveal } from "@/components/reveal";
-import { getPosts, getPostBySlug } from "@/lib/api";
+import { JsonLd } from "@/components/json-ld";
+import { getPosts, getPostBySlug, getSiteSettings } from "@/lib/api";
+import { buildMetadata, blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
@@ -22,7 +24,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
-  return { title: post?.title ?? "Journal", description: post?.excerpt };
+  if (!post) return { title: "Journal" };
+  return buildMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${slug}`,
+    images: post.image ? [post.image] : undefined,
+    type: "article",
+  });
 }
 
 export default async function BlogPostPage({
@@ -31,7 +40,7 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const [post, { profile }] = await Promise.all([getPostBySlug(slug), getSiteSettings()]);
   if (!post) notFound();
 
   // Admin-authored Markdown only (no public submission path), so rendering
@@ -40,6 +49,23 @@ export default async function BlogPostPage({
 
   return (
     <article>
+      <JsonLd
+        data={[
+          blogPostingJsonLd({
+            title: post.title,
+            description: post.excerpt,
+            path: `/blog/${slug}`,
+            image: post.image,
+            datePublished: post.date,
+            authorName: profile.name,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Journal", path: "/blog" },
+            { name: post.title, path: `/blog/${slug}` },
+          ]),
+        ]}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href="/blog" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

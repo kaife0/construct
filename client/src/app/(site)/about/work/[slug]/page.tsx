@@ -5,7 +5,9 @@ import { ArrowLeft, ArrowUpRight, MapPin, CalendarDays, Ruler, Layers } from "lu
 import { getProjects, getProjectBySlug, getSiteSettings } from "@/lib/api";
 import type { Project } from "@/lib/content";
 import { ImageGallery } from "@/components/image-gallery";
+import { JsonLd } from "@/components/json-ld";
 import { siteConfig, whatsappUrl } from "@/lib/site";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const projects = await getProjects();
@@ -19,7 +21,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  return { title: project?.title ?? "Project", description: project?.description };
+  if (!project) return { title: "Project" };
+  return buildMetadata({
+    title: `${project.title} — ${project.location}`,
+    description:
+      project.description ?? `${project.title} — a ${project.type ?? "construction"} project in ${project.location} (${project.year}).`,
+    path: `/about/work/${slug}`,
+    images: project.image ? [project.image] : undefined,
+  });
 }
 
 const specs = (project: Project) =>
@@ -43,6 +52,13 @@ export default async function ProjectDetailPage({
 
   return (
     <article>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+          { name: project.title, path: `/about/work/${slug}` },
+        ])}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href="/about" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

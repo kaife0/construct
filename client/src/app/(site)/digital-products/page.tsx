@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { CategoryGrid } from "@/components/digital-products/category-grid";
 import { getDigitalProductCategories } from "@/lib/api";
+import { buildMetadata, keywords } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Digital Products",
-  description: "Ready-made house plans, templates and CAD resources you can buy and customise.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Digital Products — Ready-made House Plans & CAD Resources",
+  description:
+    "Ready-made house plans (ghar ka naksha), floor plans, elevations, templates and CAD resources you can buy and get customised for your plot, budget and Vastu preferences.",
+  path: "/digital-products",
+  keywords: keywords.planning,
+});
 
 export default async function DigitalProductsPage() {
   const categories = await getDigitalProductCategories();

@@ -3,12 +3,15 @@ import { PageHeader } from "@/components/page-header";
 import { ServiceGrid } from "@/components/services/service-grid";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
 import { getServices } from "@/lib/api";
+import { buildMetadata, keywords } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Services",
   description:
-    "Floor plans, interior design, exterior elevation, 3D walkthroughs, BBS, estimation, approvals, renovation and drafting support.",
-};
+    "House planning, structural design, interior design, exterior & 3D elevation, walkthroughs, bar bending schedule (BBS), estimation & BOQ, approval drawings, renovation and CAD drafting support.",
+  path: "/services",
+  keywords: [...keywords.services, ...keywords.planning],
+});
 
 export default async function ServicesPage() {
   const services = await getServices();

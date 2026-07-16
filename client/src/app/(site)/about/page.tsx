@@ -6,11 +6,16 @@ import { WorkShowcaseSection } from "@/components/about/work-showcase-section";
 import { AchievementsSection } from "@/components/about/achievements-section";
 import { WhatsAppCtaSection } from "@/components/whatsapp-cta-section";
 import { getProjects, getSiteSettings } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "The engineer behind CasaStruct — experience, credentials, work and approach.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { profile } = await getSiteSettings();
+  return buildMetadata({
+    title: `About ${profile.name} — ${profile.role}`,
+    description: profile.intro,
+    path: "/about",
+  });
+}
 
 export default async function AboutPage() {
   const [projects, { profile }] = await Promise.all([getProjects(), getSiteSettings()]);

@@ -5,7 +5,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { getServices, getServiceBySlug, getSiteSettings } from "@/lib/api";
 import { InquiryForm } from "@/components/inquiry-form";
+import { JsonLd } from "@/components/json-ld";
 import { siteConfig, whatsappUrl } from "@/lib/site";
+import { buildMetadata, serviceJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const services = await getServices();
@@ -19,7 +21,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const service = await getServiceBySlug(slug);
-  return { title: service?.title ?? "Service", description: service?.summary };
+  if (!service) return { title: "Service" };
+  return buildMetadata({
+    title: service.title,
+    description: service.summary,
+    path: `/services/${slug}`,
+    images: service.image ? [service.image] : undefined,
+  });
 }
 
 export default async function ServiceDetailPage({
@@ -33,6 +41,21 @@ export default async function ServiceDetailPage({
 
   return (
     <article>
+      <JsonLd
+        data={[
+          serviceJsonLd({
+            name: service.title,
+            description: service.summary,
+            path: `/services/${slug}`,
+            image: service.image,
+          }),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/services" },
+            { name: service.title, path: `/services/${slug}` },
+          ]),
+        ]}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href="/services" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

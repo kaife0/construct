@@ -5,6 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { getDigitalProductCategories, getDigitalProductCategoryBySlug, getPlans, getDigitalProducts } from "@/lib/api";
 import { PlansGrid } from "@/components/plans-grid";
 import { ProductGrid } from "@/components/digital-products/product-grid";
+import { JsonLd } from "@/components/json-ld";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const categories = await getDigitalProductCategories();
@@ -18,7 +20,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const category = await getDigitalProductCategoryBySlug(slug);
-  return { title: category?.title ?? "Digital Products", description: category?.summary };
+  if (!category) return { title: "Digital Products" };
+  return buildMetadata({
+    title: category.title,
+    description: category.summary,
+    path: `/digital-products/${slug}`,
+    images: category.image ? [category.image] : undefined,
+  });
 }
 
 export default async function DigitalProductCategoryPage({
@@ -35,6 +43,13 @@ export default async function DigitalProductCategoryPage({
 
   return (
     <article>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Digital Products", path: "/digital-products" },
+          { name: category.title, path: `/digital-products/${slug}` },
+        ])}
+      />
       <header className="border-b border-line">
         <div className="container-x py-14 md:py-20">
           <Link href="/digital-products" className="label inline-flex items-center gap-1.5 text-graphite hover:text-ink">

@@ -3,11 +3,14 @@ import { PageHeader } from "@/components/page-header";
 import { BlogGrid } from "@/components/blog/blog-grid";
 import { CategoryPills } from "@/components/blog/category-pills";
 import { getPosts, getBlogCategories } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Journal",
-  description: "Ideas, guides and site notes on planning, estimation and structural design.",
-};
+export const metadata: Metadata = buildMetadata({
+  title: "Journal — House Planning, Estimation & Structural Design Guides",
+  description:
+    "Practical, jargon-free guides on house planning, material estimation, costing and structural design — written from real projects by a practising civil engineer.",
+  path: "/blog",
+});
 
 export default async function BlogPage() {
   const [posts, categories] = await Promise.all([getPosts(), getBlogCategories()]);
