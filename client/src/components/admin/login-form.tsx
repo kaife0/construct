@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "motion/react";
-import { Lock, AlertCircle } from "lucide-react";
+import { Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { loginRequest } from "@/lib/admin-auth";
 
 export function LoginForm() {
@@ -11,6 +11,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -60,14 +61,24 @@ export function LoginForm() {
         </div>
         <div>
           <label className="label mb-2 block text-[11px]">Password</label>
-          <input
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={inputCls}
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`${inputCls} pr-11`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute right-0 top-0 grid h-full w-11 place-items-center text-graphite transition-colors hover:text-ink"
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         </div>
       </div>
 
