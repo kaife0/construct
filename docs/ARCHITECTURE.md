@@ -103,6 +103,7 @@ server/src/
 | **multer** | Buffers uploaded images in memory |
 | **sharp** | Re-encodes every upload to capped-width WebP — strips EXIF and any payload smuggled in the original file, and caps decode pixels against decompression-bomb images |
 | **slugify** | Generates unique, URL-safe slugs from titles |
+| **cloudinary** | Optional image storage backend (`STORAGE_DRIVER=cloudinary`) for hosts with an ephemeral filesystem |
 
 ## Authentication
 
@@ -186,13 +187,24 @@ eight times, built from shared components in `components/admin/`:
    metadata, outputs WebP at quality 80, and generates a random filename.
    **This step is also the security boundary** — nothing resembling the
    original uploaded bytes is ever written to disk.
-4. `storage.save()` writes it (currently `LocalDiskStorage`, under
-   `server/uploads/`, served by Express's `/uploads` static route). The
-   `ImageStorage` interface (`lib/storage/types.ts`) is the seam for adding a
-   Cloudinary/S3/GCS driver later without touching any route.
+4. `storage.save()` writes it, via whichever driver `STORAGE_DRIVER` selects
+   (`lib/storage/index.ts`): `LocalDiskStorage` (under `server/uploads/`,
+   served by Express's `/uploads` static route) for a host with persistent
+   disk, or `CloudinaryStorage` for one without. Both implement the same
+   `ImageStorage` interface (`lib/storage/types.ts`), so no route or app code
+   depends on which is active.
 5. On replace/delete, `storage.remove()` cleans up the old file(s) —
-   best-effort; a disk hiccup here must never fail the DB write that already
-   succeeded.
+   best-effort; a storage hiccup here must never fail the DB write that
+   already succeeded. `CloudinaryStorage` derives the asset's `public_id`
+   back out of its own stored URL (it's assigned deterministically as
+   `${folder}/${filename-without-extension}` at upload time), so deletion
+   never needs to look anything up first.
+
+Moving from local disk to Cloudinary later doesn't touch any already-uploaded
+files automatically — `npm run migrate:images-to-cloudinary` (in `server/`)
+uploads everything under `server/uploads/` to Cloudinary and rewrites the
+referencing URLs in MongoDB in one pass. See the
+[root README's deployment section](../README.md#deployment).
 
 ## Security measures in place
 

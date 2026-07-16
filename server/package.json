@@ -13,10 +13,12 @@
     "seed:services": "tsx src/scripts/seed-services.ts",
     "seed:plans": "tsx src/scripts/seed-plans.ts",
     "seed:digital-products": "tsx src/scripts/seed-digital-products.ts",
-    "seed:blog": "tsx src/scripts/seed-blog.ts"
+    "seed:blog": "tsx src/scripts/seed-blog.ts",
+    "migrate:images-to-cloudinary": "tsx src/scripts/migrate-images-to-cloudinary.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

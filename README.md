@@ -74,18 +74,37 @@ in a fresh database — real content is normally added through the admin panel.
 
 ## Deployment
 
-Frontend and backend run as two separate Node processes (e.g. via PM2),
-sharing one MongoDB Atlas database. Both need production environment
+Frontend and backend are deployed independently, sharing one MongoDB Atlas
+database (e.g. Vercel for the frontend, Render for the backend — or two
+Node processes on a single VPS via PM2). Both need production environment
 variables set explicitly:
 
-- **Backend** (`server/.env`): `MONGODB_URI`, `JWT_SECRET`, `CORS_ORIGIN` (the
-  deployed frontend's URL), `NODE_ENV=production` (required — this is what
-  makes the session cookie `Secure`/HTTPS-only).
-- **Frontend** (`client/.env.local`): `API_URL` (the deployed backend's URL,
-  used server-side for the rewrite proxy), the same `JWT_SECRET`, and
-  `NEXT_PUBLIC_SITE_URL`.
+- **Backend**: `MONGODB_URI`, `JWT_SECRET`, `CORS_ORIGIN` (the deployed
+  frontend's URL), `NODE_ENV=production` (required — this is what makes the
+  session cookie `Secure`/HTTPS-only), and the `STORAGE_DRIVER`/Cloudinary
+  vars below.
+- **Frontend**: `API_URL` (the deployed backend's URL, used server-side for
+  the rewrite proxy), the same `JWT_SECRET`, and `NEXT_PUBLIC_SITE_URL`.
 
-Uploaded images are currently stored on the backend's local disk
-(`server/uploads/`, gitignored) — back this up independently of your deploy
-process. A Cloudinary-backed storage driver is planned; see
-`server/src/lib/storage/index.ts` for where that plugs in.
+### Image storage on an ephemeral host
+
+`STORAGE_DRIVER=local` (the default) writes uploads to `server/uploads/` on
+disk — fine for a VPS with persistent disk, **not safe** on a host with an
+ephemeral filesystem (Render, Vercel, Cloud Run, ...), where every deploy or
+restart wipes anything not in git.
+
+For those hosts, set `STORAGE_DRIVER=cloudinary` and provide
+`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` (from
+your Cloudinary dashboard). If you already have images stored locally, move
+them over first:
+
+```bash
+cd server
+# with CLOUDINARY_* vars set in .env (STORAGE_DRIVER can still say "local" for this run)
+npm run migrate:images-to-cloudinary
+```
+
+This uploads every file under `server/uploads/` to Cloudinary and rewrites
+the matching URLs in MongoDB. It's idempotent — safe to re-run — and doesn't
+touch the local files, so verify the site looks right before deleting them.
+Then set `STORAGE_DRIVER=cloudinary` for the deployed backend going forward.

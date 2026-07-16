@@ -1,9 +1,8 @@
 /**
- * Storage abstraction — lets us swap where uploaded images physically live
- * without touching any route/app code. Local-disk is implemented now (works in
- * dev and on a Compute Engine VM with a persistent disk). A GoogleCloudStorage
- * implementation can be added later for Cloud Run (ephemeral disk) by
- * implementing this same interface and selecting it via STORAGE_DRIVER in .env.
+ * Storage abstraction — lets us swap where uploaded images physically live without touching any
+ * route/app code. "local" (LocalDiskStorage) works for dev and any host with a persistent disk;
+ * "cloudinary" (CloudinaryStorage) is required for hosts with an ephemeral filesystem (Render,
+ * Vercel, Cloud Run, ...). Selected via STORAGE_DRIVER in .env.
  */
 export interface ImageStorage {
   /**
