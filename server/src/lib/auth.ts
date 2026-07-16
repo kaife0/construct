@@ -27,9 +27,9 @@ function getJwtSecret(): string {
 }
 
 export function signSession(payload: SessionPayload) {
-  return jwt.sign(payload, getJwtSecret(), { expiresIn: TOKEN_EXPIRY });
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: TOKEN_EXPIRY, algorithm: "HS256" });
 }
 
 export function verifySession(token: string): SessionPayload {
-  return jwt.verify(token, getJwtSecret()) as SessionPayload;
+  return jwt.verify(token, getJwtSecret(), { algorithms: ["HS256"] }) as SessionPayload;
 }
