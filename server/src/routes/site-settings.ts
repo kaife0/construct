@@ -1,9 +1,6 @@
-import { Router } from "express";
 import { z } from "zod";
 import { SiteSettings } from "../models/index.js";
-import { requireAdmin } from "../middleware/requireAdmin.js";
-
-const router = Router();
+import { createSingletonRouter } from "../lib/singletonRouter.js";
 
 const schema = z.object({
   profile: z.object({
@@ -40,28 +37,4 @@ const schema = z.object({
   }),
 });
 
-// ---- Public read -------------------------------------------------------
-
-router.get("/", async (_req, res) => {
-  let settings = await SiteSettings.findOne();
-  if (!settings) settings = await SiteSettings.create({});
-  res.json(settings);
-});
-
-// ---- Admin update --------------------------------------------------------
-
-router.put("/", requireAdmin, async (req, res) => {
-  const parsed = schema.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid data." });
-    return;
-  }
-  const updated = await SiteSettings.findOneAndUpdate({}, parsed.data, {
-    new: true,
-    upsert: true,
-    setDefaultsOnInsert: true,
-  });
-  res.json(updated);
-});
-
-export default router;
+export default createSingletonRouter({ model: SiteSettings, schema });

@@ -11,11 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const UPLOADS_DIR =
   process.env.UPLOADS_DIR ?? path.resolve(__dirname, "../../../uploads");
 
-/**
- * Selected storage backend. Add a "gcs" branch here (new GoogleCloudStorage
- * class implementing ImageStorage) when deploying to Cloud Run — nothing else
- * in the app changes.
- */
+/** Selected storage backend — add a "gcs" case here when deploying somewhere with ephemeral disk. */
 function createStorage(): ImageStorage {
   const driver = process.env.STORAGE_DRIVER ?? "local";
   switch (driver) {

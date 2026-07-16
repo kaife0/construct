@@ -3,6 +3,7 @@ import rateLimit from "express-rate-limit";
 import { z } from "zod";
 import { Inquiry } from "../models/index.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
+import { ah } from "../lib/asyncHandler.js";
 
 const router = Router();
 
@@ -23,46 +24,61 @@ const submitLimiter = rateLimit({
   message: { error: "Too many submissions. Please try again later." },
 });
 
-// ---- Public submit ---------------------------------------------------------
+// ---- Public submit ----------------------------------------------------------
 
-router.post("/", submitLimiter, async (req, res) => {
-  const parsed = submitSchema.safeParse(req.body);
-  if (!parsed.success) {
-    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid submission." });
-    return;
-  }
-  await Inquiry.create(parsed.data);
-  res.status(201).json({ ok: true });
-});
+router.post(
+  "/",
+  submitLimiter,
+  ah(async (req, res) => {
+    const parsed = submitSchema.safeParse(req.body);
+    if (!parsed.success) {
+      res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid submission." });
+      return;
+    }
+    await Inquiry.create(parsed.data);
+    res.status(201).json({ ok: true });
+  })
+);
 
-// ---- Admin inbox -----------------------------------------------------------
+// ---- Admin inbox --------------------------------------------------------------
 
-router.get("/", requireAdmin, async (_req, res) => {
-  const inquiries = await Inquiry.find().sort({ createdAt: -1 });
-  res.json(inquiries);
-});
+router.get(
+  "/",
+  requireAdmin,
+  ah(async (_req, res) => {
+    res.json(await Inquiry.find().sort({ createdAt: -1 }));
+  })
+);
 
-router.patch("/:id", requireAdmin, async (req, res) => {
-  const status = z.enum(["new", "contacted", "closed"]).safeParse(req.body?.status);
-  if (!status.success) {
-    res.status(400).json({ error: "Invalid status." });
-    return;
-  }
-  const updated = await Inquiry.findByIdAndUpdate(req.params.id, { status: status.data }, { new: true });
-  if (!updated) {
-    res.status(404).json({ error: "Inquiry not found." });
-    return;
-  }
-  res.json(updated);
-});
+router.patch(
+  "/:id",
+  requireAdmin,
+  ah(async (req, res) => {
+    const status = z.enum(["new", "contacted", "closed"]).safeParse(req.body?.status);
+    if (!status.success) {
+      res.status(400).json({ error: "Invalid status." });
+      return;
+    }
+    const updated = await Inquiry.findByIdAndUpdate(req.params.id, { status: status.data }, { new: true });
+    if (!updated) {
+      res.status(404).json({ error: "Inquiry not found." });
+      return;
+    }
+    res.json(updated);
+  })
+);
 
-router.delete("/:id", requireAdmin, async (req, res) => {
-  const deleted = await Inquiry.findByIdAndDelete(req.params.id);
-  if (!deleted) {
-    res.status(404).json({ error: "Inquiry not found." });
-    return;
-  }
-  res.json({ ok: true });
-});
+router.delete(
+  "/:id",
+  requireAdmin,
+  ah(async (req, res) => {
+    const deleted = await Inquiry.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      res.status(404).json({ error: "Inquiry not found." });
+      return;
+    }
+    res.json({ ok: true });
+  })
+);
 
 export default router;

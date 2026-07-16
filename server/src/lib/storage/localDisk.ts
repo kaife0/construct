@@ -2,12 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { ImageStorage } from "./types.js";
 
-/**
- * Stores images on the local filesystem under UPLOADS_DIR (default: server/uploads),
- * served statically by Express at /uploads. The public URL stored in the DB is a
- * root-relative path like "/uploads/services/abc123.webp" — the frontend proxies
- * /uploads/* to this server so the same path works in dev and production.
- */
+/** Stores images on disk under UPLOADS_DIR, served statically at /uploads (see storage/index.ts). */
 export class LocalDiskStorage implements ImageStorage {
   private root: string;
   private publicBase = "/uploads";
@@ -27,14 +22,13 @@ export class LocalDiskStorage implements ImageStorage {
     try {
       if (!publicUrl.startsWith(`${this.publicBase}/`)) return;
       const relative = publicUrl.slice(this.publicBase.length + 1);
-      // Guard against path traversal from a tampered DB value.
-      const target = path.resolve(this.root, relative);
-      if (!target.startsWith(path.resolve(this.root))) return;
+      const root = path.resolve(this.root);
+      const target = path.resolve(root, relative);
+      // Reject traversal outside root; the sep suffix avoids a sibling dir like "uploads-evil" false-passing startsWith.
+      if (target !== root && !target.startsWith(root + path.sep)) return;
       await fs.rm(target, { force: true });
     } catch (err) {
-      // Best-effort per the ImageStorage contract — a disk hiccup here must
-      // never fail the DB write/delete that already succeeded.
-      console.error("[storage] failed to remove", publicUrl, err);
+      console.error("[storage] failed to remove", publicUrl, err); // best-effort cleanup — must not fail the caller's DB write
     }
   }
 }
