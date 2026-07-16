@@ -1,14 +1,16 @@
 import { Reveal } from "@/components/reveal";
 import { Counter } from "@/components/counter";
+import { getSiteSettings } from "@/lib/api";
 
-const stats = [
-  { to: 500, suffix: "+", label: "Projects delivered" },
-  { to: 14, suffix: "yrs", label: "Field experience" },
-  { to: 60, suffix: "+", label: "Cities served" },
-  { to: 98, suffix: "%", label: "On-time handover" },
-];
+export async function StatsSection() {
+  const { profile } = await getSiteSettings();
+  const stats = [
+    { to: profile.stats.projects, suffix: "+", label: "Projects delivered" },
+    { to: profile.stats.experienceYears, suffix: "yrs", label: "Field experience" },
+    { to: profile.stats.cities, suffix: "+", label: "Cities served" },
+    { to: 98, suffix: "%", label: "On-time handover" }, // not admin-editable — no backing field in SiteSettings
+  ];
 
-export function StatsSection() {
   return (
     <section className="border-t border-line bg-ink text-paper">
       <div className="container-x grid grid-cols-2 gap-8 py-16 md:grid-cols-4 md:py-20">

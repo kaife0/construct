@@ -77,14 +77,6 @@ body {
   line-height: 0.98;
 }
 
-/* Full-bleed faint grid used behind technical sections */
-.blueprint-grid {
-  background-image:
-    linear-gradient(to right, var(--line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
 ::selection {
   background: var(--ink);
   color: var(--paper);

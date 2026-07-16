@@ -2,18 +2,11 @@ import Link from "next/link";
 import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { InstagramIcon, LinkedinIcon, YoutubeIcon } from "@/components/social-icons";
 import { navLinks, siteConfig, whatsappUrl, telHref } from "@/lib/site";
-import { getSiteSettings } from "@/lib/api";
-
-const services = [
-  { label: "House Planning", href: "/services" },
-  { label: "Structural Design", href: "/services" },
-  { label: "Interior Design", href: "/services" },
-  { label: "2D & 3D Plans", href: "/services" },
-];
+import { getServices, getSiteSettings } from "@/lib/api";
 
 export async function Footer() {
   const year = new Date().getFullYear();
-  const { contact, socials } = await getSiteSettings();
+  const [services, { contact, socials }] = await Promise.all([getServices(), getSiteSettings()]);
 
   return (
     <footer className="bg-ink text-paper">
@@ -77,9 +70,9 @@ export async function Footer() {
         <div>
           <h3 className="label text-paper/40">Services</h3>
           <ul className="mt-4 space-y-2.5">
-            {services.map((s) => (
-              <li key={s.label}>
-                <Link href={s.href} className="text-sm text-paper/70 transition-colors hover:text-accent">{s.label}</Link>
+            {services.slice(0, 4).map((s) => (
+              <li key={s.slug}>
+                <Link href={`/services#${s.slug}`} className="text-sm text-paper/70 transition-colors hover:text-accent">{s.title}</Link>
               </li>
             ))}
           </ul>

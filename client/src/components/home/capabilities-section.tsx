@@ -1,7 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
-import { ServiceGlyph } from "@/components/service-glyph";
 import { getServices } from "@/lib/api";
 
 export async function CapabilitiesSection() {
@@ -29,11 +29,15 @@ export async function CapabilitiesSection() {
                 href={`/services#${c.slug}`}
                 className="group flex h-full flex-col border border-line bg-surface p-4 transition-shadow duration-300 hover:shadow-sm sm:p-6"
               >
-                <div className="relative mb-4 aspect-[220/150] w-full overflow-hidden border border-line bg-paper sm:mb-6">
-                  <div className="absolute inset-0 blueprint-grid opacity-50" />
-                  <div className="absolute inset-0 p-2.5 sm:p-3.5">
-                    <ServiceGlyph slug={c.slug} />
-                  </div>
+                <div className="relative mb-4 aspect-220/150 w-full overflow-hidden border border-line bg-paper sm:mb-6">
+                  <Image
+                    src={c.image}
+                    alt={c.title}
+                    fill
+                    unoptimized
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    className="object-cover grayscale-35 transition-all duration-500 group-hover:scale-[1.04] group-hover:grayscale-0"
+                  />
                 </div>
                 <div className="flex items-start justify-between">
                   <span className="label text-accent-strong">{c.index}</span>
