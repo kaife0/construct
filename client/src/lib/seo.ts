@@ -83,23 +83,45 @@ type BuildArgs = {
   /** Absolute image URL(s); omit to fall back to the site-wide branded OG image. */
   images?: string[];
   type?: "website" | "article";
+  /** Overrides the `path`-derived canonical — set only when a post declares its own. */
+  canonical?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  /** Social-card overrides; both fall back to `title` / `description`. */
+  ogTitle?: string;
+  ogDescription?: string;
 };
 
 /**
  * Builds a consistent page Metadata object: canonical URL + Open Graph + Twitter card.
  * `metadataBase` (set in the root layout) resolves the relative `path` to absolute.
  */
-export function buildMetadata({ title, description, path, keywords, images, type = "website" }: BuildArgs): Metadata {
+export function buildMetadata({
+  title,
+  description,
+  path,
+  keywords,
+  images,
+  type = "website",
+  canonical,
+  noindex,
+  nofollow,
+  ogTitle,
+  ogDescription,
+}: BuildArgs): Metadata {
   const ogImages = images?.length ? images : [defaultOgImage];
   const twitterImages = images?.length ? images : [defaultOgImage.url];
+  const socialTitle = ogTitle || title;
+  const socialDescription = ogDescription || description;
   return {
     ...(title ? { title } : {}),
     description,
     ...(keywords?.length ? { keywords } : {}),
-    alternates: { canonical: path },
+    alternates: { canonical: canonical || path },
+    ...(noindex || nofollow ? { robots: { index: !noindex, follow: !nofollow } } : {}),
     openGraph: {
-      ...(title ? { title } : {}),
-      description,
+      ...(socialTitle ? { title: socialTitle } : {}),
+      description: socialDescription,
       url: path,
       type,
       siteName: siteConfig.name,
@@ -108,8 +130,8 @@ export function buildMetadata({ title, description, path, keywords, images, type
     },
     twitter: {
       card: "summary_large_image",
-      ...(title ? { title } : {}),
-      description,
+      ...(socialTitle ? { title: socialTitle } : {}),
+      description: socialDescription,
       images: twitterImages,
     },
   };
@@ -210,6 +232,19 @@ export function productJsonLd(args: {
           },
         }
       : {}),
+  };
+}
+
+/** Drives Google's expandable FAQ rich result — fed by the per-post Q&A pairs. */
+export function faqJsonLd(faqs: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
   };
 }
 

@@ -92,7 +92,18 @@ type PostDoc = {
   readMins: number;
   createdAt: string;
   categoryId: { title: string; slug: string } | null;
-};
+} & Partial<{
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  canonicalUrl: string;
+  noindex: boolean;
+  nofollow: boolean;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  faqs: { question: string; answer: string }[];
+}>;
 
 /** Published posts only. Pass a category slug to filter, e.g. from /blog/category/[slug]. */
 export async function getPosts(categorySlug?: string): Promise<Post[]> {
@@ -107,6 +118,18 @@ export async function getPosts(categorySlug?: string): Promise<Post[]> {
     date: d.createdAt,
     readMins: d.readMins,
     image: d.image,
+    seo: {
+      metaTitle: d.metaTitle ?? "",
+      metaDescription: d.metaDescription ?? "",
+      keywords: d.keywords ?? [],
+      canonicalUrl: d.canonicalUrl ?? "",
+      noindex: d.noindex ?? false,
+      nofollow: d.nofollow ?? false,
+      ogTitle: d.ogTitle ?? "",
+      ogDescription: d.ogDescription ?? "",
+      ogImage: d.ogImage ?? "",
+      faqs: d.faqs ?? [],
+    },
   }));
 }
 

@@ -5,6 +5,12 @@
 const inputCls =
   "w-full resize-y border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none transition-colors focus:border-ink";
 
+/** Omitted when the caller renders its own heading row (e.g. label + character counter). */
+function FieldLabel({ label, required }: { label?: string; required?: boolean }) {
+  if (!label) return null;
+  return <label className="label mb-2 block text-[11px]">{label}{required && " *"}</label>;
+}
+
 export function TextField({
   label,
   value,
@@ -13,7 +19,7 @@ export function TextField({
   hint,
   required,
 }: {
-  label: string;
+  label?: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
@@ -22,7 +28,7 @@ export function TextField({
 }) {
   return (
     <div>
-      <label className="label mb-2 block text-[11px]">{label}{required && " *"}</label>
+      <FieldLabel label={label} required={required} />
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -43,7 +49,7 @@ export function TextAreaField({
   hint,
   required,
 }: {
-  label: string;
+  label?: string;
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
@@ -53,7 +59,7 @@ export function TextAreaField({
 }) {
   return (
     <div>
-      <label className="label mb-2 block text-[11px]">{label}{required && " *"}</label>
+      <FieldLabel label={label} required={required} />
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}

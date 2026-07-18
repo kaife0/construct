@@ -7,7 +7,7 @@ import { marked } from "marked";
 import { Reveal } from "@/components/reveal";
 import { JsonLd } from "@/components/json-ld";
 import { getPosts, getPostBySlug, getSiteSettings } from "@/lib/api";
-import { buildMetadata, blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/seo";
+import { buildMetadata, blogPostingJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
@@ -25,12 +25,20 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return { title: "Journal" };
+  const { seo } = post;
+  const socialImage = seo.ogImage || post.image;
   return buildMetadata({
-    title: post.title,
-    description: post.excerpt,
+    title: seo.metaTitle || post.title,
+    description: seo.metaDescription || post.excerpt,
     path: `/blog/${slug}`,
-    images: post.image ? [post.image] : undefined,
+    keywords: seo.keywords.length ? seo.keywords : undefined,
+    images: socialImage ? [socialImage] : undefined,
     type: "article",
+    canonical: seo.canonicalUrl || undefined,
+    noindex: seo.noindex,
+    nofollow: seo.nofollow,
+    ogTitle: seo.ogTitle || undefined,
+    ogDescription: seo.ogDescription || undefined,
   });
 }
 
@@ -43,9 +51,11 @@ export default async function BlogPostPage({
   const [post, { profile }] = await Promise.all([getPostBySlug(slug), getSiteSettings()]);
   if (!post) notFound();
 
-  // Admin-authored Markdown only (no public submission path), so rendering
-  // straight to HTML here is safe — nothing an untrusted visitor can inject.
-  const html = marked.parse(post.content || post.excerpt, { async: false }) as string;
+  // Admin-authored only (no public submission path), so rendering straight to HTML is safe.
+  // The editor stores HTML; posts written before it still hold Markdown, hence the fallback.
+  const source = post.content || post.excerpt;
+  const html = source.trimStart().startsWith("<") ? source : (marked.parse(source, { async: false }) as string);
+  const { faqs } = post.seo;
 
   return (
     <article>
@@ -64,6 +74,7 @@ export default async function BlogPostPage({
             { name: "Journal", path: "/blog" },
             { name: post.title, path: `/blog/${slug}` },
           ]),
+          ...(faqs.length ? [faqJsonLd(faqs)] : []),
         ]}
       />
       <header className="border-b border-line">
@@ -97,6 +108,23 @@ export default async function BlogPostPage({
         <Reveal>
           <div className="prose-content" dangerouslySetInnerHTML={{ __html: html }} />
         </Reveal>
+
+        {/* Rendered, not just structured data — Google only grants the FAQ rich result when the answers are visible. */}
+        {faqs.length > 0 && (
+          <Reveal>
+            <section className="mt-14 max-w-3xl border-t border-line pt-10">
+              <h2 className="display text-2xl">Frequently asked questions</h2>
+              <dl className="mt-6 space-y-6">
+                {faqs.map((faq) => (
+                  <div key={faq.question}>
+                    <dt className="text-base font-medium text-ink">{faq.question}</dt>
+                    <dd className="mt-1.5 text-sm leading-relaxed text-graphite">{faq.answer}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          </Reveal>
+        )}
       </div>
     </article>
   );

@@ -11,6 +11,20 @@ const schema = z.object({
   readMins: z.number().int().positive().optional(),
   published: z.boolean().optional(),
   order: z.number().int().optional(),
+
+  metaTitle: z.string().trim().default(""),
+  metaDescription: z.string().trim().default(""),
+  focusKeyword: z.string().trim().default(""),
+  keywords: z.array(z.string().trim().min(1)).default([]),
+  canonicalUrl: z.string().trim().default(""),
+  noindex: z.boolean().optional(),
+  nofollow: z.boolean().optional(),
+  ogTitle: z.string().trim().default(""),
+  ogDescription: z.string().trim().default(""),
+  ogImage: z.string().trim().default(""),
+  faqs: z
+    .array(z.object({ question: z.string().trim().min(1), answer: z.string().trim().min(1) }))
+    .default([]),
 });
 
 /** GET /?category=<slug> filters to published posts in that category; omit for all published posts. */

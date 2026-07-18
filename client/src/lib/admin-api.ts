@@ -199,6 +199,8 @@ export const deleteBlogCategory = blogCategories.remove;
 
 // ---- Blog Posts ---------------------------------------------------------
 
+export type BlogPostFaq = { question: string; answer: string };
+
 export type BlogPostInput = {
   categoryId: string;
   title: string;
@@ -207,6 +209,17 @@ export type BlogPostInput = {
   image: string;
   readMins?: number;
   published: boolean;
+  metaTitle: string;
+  metaDescription: string;
+  focusKeyword: string;
+  keywords: string[];
+  canonicalUrl: string;
+  noindex: boolean;
+  nofollow: boolean;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  faqs: BlogPostFaq[];
 };
 export type BlogPostRecord = BlogPostInput & { _id: string; slug: string; order: number };
 
