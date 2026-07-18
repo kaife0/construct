@@ -201,14 +201,7 @@ export const deleteBlogCategory = blogCategories.remove;
 
 export type BlogPostFaq = { question: string; answer: string };
 
-export type BlogPostInput = {
-  categoryId: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  readMins?: number;
-  published: boolean;
+export type BlogPostSeo = {
   metaTitle: string;
   metaDescription: string;
   focusKeyword: string;
@@ -221,7 +214,20 @@ export type BlogPostInput = {
   ogImage: string;
   faqs: BlogPostFaq[];
 };
-export type BlogPostRecord = BlogPostInput & { _id: string; slug: string; order: number };
+
+export type BlogPostInput = {
+  categoryId: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  readMins?: number;
+  published: boolean;
+} & BlogPostSeo;
+
+/** SEO fields are `Partial` here: posts written before the SEO panel shipped don't carry them. */
+export type BlogPostRecord = Omit<BlogPostInput, keyof BlogPostSeo> &
+  Partial<BlogPostSeo> & { _id: string; slug: string; order: number };
 
 const blogPosts = crudClient<BlogPostInput, BlogPostRecord>("blog-posts", "posts");
 export const listBlogPosts = () => jsonRequest<BlogPostRecord[]>("/api/blog-posts/admin", "GET");

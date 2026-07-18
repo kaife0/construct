@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { TextField, TextAreaField, NumberField, SelectField, CheckboxField } from "@/components/fields";
 import { ImageUploader } from "@/components/admin/image-uploader";
 import { AdminFormShell } from "@/components/admin/admin-form-shell";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
+import { SeoPanel, emptySeo, type SeoValue } from "@/components/admin/seo-panel";
 import {
   createBlogPost,
   updateBlogPost,
@@ -12,6 +14,23 @@ import {
   type BlogPostRecord,
   type BlogCategoryRecord,
 } from "@/lib/admin-api";
+
+const pickSeo = (post?: BlogPostRecord): SeoValue =>
+  post
+    ? {
+        metaTitle: post.metaTitle ?? "",
+        metaDescription: post.metaDescription ?? "",
+        focusKeyword: post.focusKeyword ?? "",
+        keywords: post.keywords ?? [],
+        canonicalUrl: post.canonicalUrl ?? "",
+        noindex: post.noindex ?? false,
+        nofollow: post.nofollow ?? false,
+        ogTitle: post.ogTitle ?? "",
+        ogDescription: post.ogDescription ?? "",
+        ogImage: post.ogImage ?? "",
+        faqs: post.faqs ?? [],
+      }
+    : emptySeo;
 
 export function BlogPostForm({ existing }: { existing?: BlogPostRecord }) {
   const router = useRouter();
@@ -25,6 +44,7 @@ export function BlogPostForm({ existing }: { existing?: BlogPostRecord }) {
   const [content, setContent] = useState(existing?.content ?? "");
   const [readMins, setReadMins] = useState(existing?.readMins ?? 4);
   const [published, setPublished] = useState(existing?.published ?? false);
+  const [seo, setSeo] = useState<SeoValue>(() => pickSeo(existing));
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -56,6 +76,8 @@ export function BlogPostForm({ existing }: { existing?: BlogPostRecord }) {
       image,
       readMins,
       published,
+      ...seo,
+      faqs: seo.faqs.filter((faq) => faq.question.trim() && faq.answer.trim()),
     };
 
     setSaving(true);
@@ -99,14 +121,12 @@ export function BlogPostForm({ existing }: { existing?: BlogPostRecord }) {
         <NumberField label="Read time" suffix="min" value={readMins} onChange={setReadMins} min={1} required />
       </div>
 
-      <TextAreaField
-        label="Content"
-        value={content}
-        onChange={setContent}
-        rows={8}
-        hint="Markdown supported — paste your draft in. Use ## for headings, **bold**, and blank lines between paragraphs. Drag the bottom-right corner to resize."
-        placeholder="Write or paste the article here…"
-      />
+      <div>
+        <label className="label mb-2 block text-[11px]">Content</label>
+        <RichTextEditor value={content} onChange={setContent} />
+      </div>
+
+      <SeoPanel value={seo} onChange={setSeo} title={title} excerpt={excerpt} contentHtml={content} slug={existing?.slug} />
 
       <CheckboxField label="Published" checked={published} onChange={setPublished} hint="Unpublished posts are only visible in the admin panel." />
     </AdminFormShell>

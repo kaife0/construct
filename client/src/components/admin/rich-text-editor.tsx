@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent, type Editor } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Image as ImageExtension } from "@tiptap/extension-image";
 import {
@@ -62,6 +62,8 @@ export function RichTextEditor({ value, onChange }: { value: string; onChange: (
   const editor = useEditor({
     // Next renders this on the server first; deferring the first paint avoids a hydration mismatch.
     immediatelyRender: false,
+    // Keeps the toolbar's active/disabled states in sync with the cursor.
+    shouldRerenderOnTransaction: true,
     extensions: [
       StarterKit.configure({ link: { openOnClick: false, autolink: false } }),
       ImageExtension.configure({ HTMLAttributes: { class: "w-full" } }),
@@ -276,5 +278,3 @@ export function RichTextEditor({ value, onChange }: { value: string; onChange: (
     </div>
   );
 }
-
-export type { Editor };
