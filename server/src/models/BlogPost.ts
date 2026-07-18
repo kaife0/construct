@@ -5,7 +5,7 @@ const BlogPostSchema = new Schema(
     slug: { type: String, required: true, unique: true },
     title: { type: String, required: true },
     excerpt: { type: String, required: true },
-    content: { type: String, default: "" }, // HTML from the admin editor (legacy posts hold markdown)
+    content: { type: String, default: "" }, // HTML, authored in the admin editor
     categoryId: { type: Schema.Types.ObjectId, ref: "BlogCategory", required: true, index: true },
     image: { type: String, required: true },
     readMins: { type: Number, default: 4 },

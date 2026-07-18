@@ -21,9 +21,9 @@ const posts = [
     title: "How many bricks does your wall really need?",
     excerpt: "A quick, practical way to estimate brick quantity — and the wastage most people forget to add.",
     content:
-      "Estimating bricks accurately starts with the net wall area — length times height, minus doors and windows.\n\n" +
-      "For a standard 9\" wall using modular bricks (190×90×90mm with a 10mm mortar joint), you need roughly **8 bricks per square foot**. Always add 5-8% wastage for cuts and breakage.\n\n" +
-      "Use the calculator on this site for an exact number based on your wall dimensions.",
+      "<p>Estimating bricks accurately starts with the net wall area — length times height, minus doors and windows.</p>" +
+      "<p>For a standard 9\" wall using modular bricks (190×90×90mm with a 10mm mortar joint), you need roughly <strong>8 bricks per square foot</strong>. Always add 5-8% wastage for cuts and breakage.</p>" +
+      "<p>Use the <a href=\"/calculators\">brick calculator</a> for an exact number based on your wall dimensions.</p>",
     categorySlug: "estimation",
     readMins: 4,
     image: "https://images.unsplash.com/photo-1704005446360-5f30e4276182?w=800&q=80&auto=format&fit=crop",
@@ -35,9 +35,9 @@ const posts = [
     title: "M20 vs M25: which concrete grade for your home?",
     excerpt: "What the numbers mean, where each grade belongs, and how the choice affects cost.",
     content:
-      "The number after \"M\" is the characteristic compressive strength in N/mm² at 28 days.\n\n" +
-      "**M20** (1:1.5:3 nominal mix) is the standard choice for residential slabs, beams and columns in low-rise construction. **M25** (1:1:2) is stronger and typically used where loads are higher — multi-storey buildings, or if your structural engineer's design specifically calls for it.\n\n" +
-      "Don't over-specify — a higher grade costs more cement per unit volume without benefit if your design doesn't need the extra strength.",
+      "<p>The number after \"M\" is the characteristic compressive strength in N/mm² at 28 days.</p>" +
+      "<p><strong>M20</strong> (1:1.5:3 nominal mix) is the standard choice for residential slabs, beams and columns in low-rise construction. <strong>M25</strong> (1:1:2) is stronger and typically used where loads are higher — multi-storey buildings, or if your structural engineer's design specifically calls for it.</p>" +
+      "<p>Don't over-specify — a higher grade costs more cement per unit volume without benefit if your design doesn't need the extra strength.</p>",
     categorySlug: "structural",
     readMins: 6,
     image: "https://images.unsplash.com/photo-1685464196387-854858ce0f4f?w=800&q=80&auto=format&fit=crop",
@@ -49,8 +49,8 @@ const posts = [
     title: "Balancing Vastu with good floor planning",
     excerpt: "How to respect Vastu preferences without compromising light, flow and efficiency.",
     content:
-      "Vastu and good architecture aren't opposites — most Vastu principles (kitchen in the south-east, master bedroom in the south-west, main entrance facing an auspicious direction) are compatible with efficient, well-lit layouts.\n\n" +
-      "The friction usually comes from rigid interpretation. A skilled planner works Vastu preferences into the layout from the start, rather than forcing changes onto a finished plan — that's when compromises on light and ventilation happen.",
+      "<p>Vastu and good architecture aren't opposites — most Vastu principles (kitchen in the south-east, master bedroom in the south-west, main entrance facing an auspicious direction) are compatible with efficient, well-lit layouts.</p>" +
+      "<p>The friction usually comes from rigid interpretation. A skilled planner works Vastu preferences into the layout from the start, rather than forcing changes onto a finished plan — that's when compromises on light and ventilation happen.</p>",
     categorySlug: "planning",
     readMins: 5,
     image: "https://images.unsplash.com/photo-1433840496881-cbd845929862?w=800&q=80&auto=format&fit=crop",

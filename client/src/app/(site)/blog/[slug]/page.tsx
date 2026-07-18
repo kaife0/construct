@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { marked } from "marked";
 import { Reveal } from "@/components/reveal";
 import { JsonLd } from "@/components/json-ld";
 import { getPosts, getPostBySlug, getSiteSettings } from "@/lib/api";
@@ -51,10 +50,9 @@ export default async function BlogPostPage({
   const [post, { profile }] = await Promise.all([getPostBySlug(slug), getSiteSettings()]);
   if (!post) notFound();
 
-  // Admin-authored only (no public submission path), so rendering straight to HTML is safe.
-  // The editor stores HTML; posts written before it still hold Markdown, hence the fallback.
-  const source = post.content || post.excerpt;
-  const html = source.trimStart().startsWith("<") ? source : (marked.parse(source, { async: false }) as string);
+  // HTML from the admin editor. Admin-authored only (no public submission path), and the
+  // editor's schema constrains what it can produce, so rendering it directly is safe.
+  const html = post.content || `<p>${post.excerpt}</p>`;
   const { faqs } = post.seo;
 
   return (
@@ -115,8 +113,8 @@ export default async function BlogPostPage({
             <section className="mt-14 max-w-3xl border-t border-line pt-10">
               <h2 className="display text-2xl">Frequently asked questions</h2>
               <dl className="mt-6 space-y-6">
-                {faqs.map((faq) => (
-                  <div key={faq.question}>
+                {faqs.map((faq, i) => (
+                  <div key={i}>
                     <dt className="text-base font-medium text-ink">{faq.question}</dt>
                     <dd className="mt-1.5 text-sm leading-relaxed text-graphite">{faq.answer}</dd>
                   </div>
